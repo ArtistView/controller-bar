@@ -1,0 +1,30 @@
+
+.body{
+  width:100%;
+  height: 100%;
+}
+.root-bar{
+  width: 100%;
+  background-color: #181818;
+  z-index: 4;
+}
+.place-holder{
+  height: calc(100vh - 90px);
+}
+
+.controller-bar-container{
+  min-width: 620px;
+  background-color: #282828;
+  border-top: 1px solid #000;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  user-select: none;
+}
+.control-bar-app{
+  text-align: center;
+}
+.app-container{
+  height: 90px;
+
+}

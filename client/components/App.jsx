@@ -8,7 +8,13 @@ class App extends React.Component{
 
 
   render(){
-    return <h1>This Works</h1>
+    return (
+      <div classname= 'contoller-components'>
+        <div>Left</div>
+        <div>Center</div>
+        <div>Right</div>
+      </div>
+    )
   }
 }
 
