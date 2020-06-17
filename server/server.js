@@ -10,6 +10,7 @@ const cors = require('cors');
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static(__dirname+'/../public'))
 
 app.set('PORT',4000)
 app.listen(app.get('PORT'),()=>{
