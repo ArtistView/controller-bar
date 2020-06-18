@@ -1,8 +1,8 @@
 module.exports = {
     "env": {
         "browser": true,
-        "es2020": true,
-        "node": true
+        "es6": true,
+        "jest": true
     },
     "extends": [
         "plugin:react/recommended",
