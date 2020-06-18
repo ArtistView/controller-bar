@@ -9,7 +9,7 @@ class App extends React.Component{
 
   render(){
     return (
-      <div classname= 'contoller-components'>
+      <div className= 'contoller-components'>
         <div>Left</div>
         <div>Center</div>
         <div>Right</div>
