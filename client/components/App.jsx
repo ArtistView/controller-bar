@@ -1,5 +1,8 @@
 import React from 'react';
 import axios from 'axios';
+import Right from './Right.jsx'
+import Left from './Left.jsx'
+import Center from './Center.jsx'
 
 class App extends React.Component{
   constructor(props){
@@ -9,10 +12,10 @@ class App extends React.Component{
 
   render(){
     return (
-      <div className= 'contoller-components'>
-        <div>Left</div>
-        <div>Center</div>
-        <div>Right</div>
+      <div className= 'controller-components'>
+        <Left/>
+        <Center/>
+        <Right/>
       </div>
     )
   }
