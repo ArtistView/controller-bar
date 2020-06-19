@@ -1,15 +1,28 @@
+*{
+  box-sizing: border-box;
+}
 
-.body{
+body{
   width:100%;
   height: 100%;
+  border: none;
+
+}
+div, footer, a {
+  margin:0;
+  padding:0;
+  border:0;
+  vertical-align:0;
+}
+/*****************************************************************/
+.place-holder{
+  height: calc(100vh - 90px);
 }
 .root-bar{
+  grid-area: controller-components;
   width: 100%;
   background-color: #181818;
   z-index: 4;
-}
-.place-holder{
-  height: calc(100vh - 90px);
 }
 
 .controller-bar-container{
@@ -21,10 +34,104 @@
   height: auto;
   user-select: none;
 }
-.control-bar-app{
-  text-align: center;
-}
+
 .app-container{
   height: 90px;
 
 }
+
+/*****************************************************************/
+.controller-components{
+  -webkit-box-align: center;
+  align-items: center;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  padding:0 16px;
+  height:90px;
+}
+
+
+.controller_left{
+  width:30%;
+  min-width: 180px;
+}
+.now-playing{
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  flex-direction: row;
+  -webkit-box-pack: start;
+  justify-content: flex-start;
+  -webkit-box-align:center;
+  align-items: center;
+  position: relative;
+  transform: translateX(0);
+  transition: transform .25s;
+}
+.image-container{
+  position: relative;
+  isolation: isolate;
+}
+[draggable]{
+  user-select:none;
+}
+a {
+  color: #fff;
+  text-decoration: none;
+}
+.a-container{
+  border: none;
+}
+.cover-art-container{
+  flex-shrink: 0;
+  position: relative;
+}
+.cover-art.shadow{
+  width: 56px;
+  height:56px;
+  box-shadow: 0 0 10px rgba(0,0,0,.3);
+}
+
+.cover-art{
+  margin:0;
+  display: block;
+  border: 0;
+  position: relative;
+  z-index: 0;
+  background-color: #282828;
+}
+.cover-art
+.cover-art-image{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: 50%;
+  background-color: #000;
+  background-repeat: no-repeat;
+}
+
+
+
+.controller_center{
+  width:40%;
+  max-width: 722px;
+}
+.controller_right{
+  width:30%;
+  min-width: 180px;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  flex-direction: row;
+  -webkit-box-pack: end;
+  justify-content: flex-end;
+}
+
+
