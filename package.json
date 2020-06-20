@@ -30,7 +30,9 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.4",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-icons": "^3.10.0",
+    "typicons.font": "^2.0.9"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",

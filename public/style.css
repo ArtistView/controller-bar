@@ -1,3 +1,4 @@
+
 *{
   box-sizing: border-box;
 }
@@ -8,11 +9,14 @@ body{
   border: none;
 
 }
-div, footer, a {
+div, footer, a, span {
   margin:0;
   padding:0;
   border:0;
   vertical-align:0;
+}
+body, button{
+  font-family: spotify-circular,spotify-circular-cyrillic,spotify-circular-arabic,spotify-circular-hebrew,Helvetica Neue,Helvetica,Arial,Hiragino Kaku Gothic Pro,Meiryo,MS Gothic,sans-serif;
 }
 /*****************************************************************/
 .place-holder{
@@ -59,6 +63,8 @@ div, footer, a {
   width:30%;
   min-width: 180px;
 }
+
+/**************************** -Image- *************************************/
 .now-playing{
   display: flex;
   -webkit-box-orient: horizontal;
@@ -117,7 +123,90 @@ a {
   background-repeat: no-repeat;
 }
 
+/**************************** -Song Title- *************************************/
+.song-title-container{
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
+  -webkit-box-pack:center;
+  justify-content: center;
+  margin: 0 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.song-title{
+  font-size:14px;
+  line-height: 20px;
+  letter-spacing: .015em;
+  color:#fff;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.song-text{
+  position: relative;
+}
+.menu-wrapper{
+  display: inline;
+}
 
+.artist-name{
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: .015em;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.artistname-wrapper{
+  display: inline;
+}
+
+.artist-text{
+  color: #b3b3b3;
+  position: relative;
+
+}
+
+/**************************** -Heart button- *************************************/
+.button-container{
+  position: relative;
+  -webkit-box-direction: normal;
+}
+.heart-button{
+  background-color: transparent;
+  border: none;
+  color: #b3b3b3;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  position: relative;
+}
+.heart-button:hover{
+  color:#fff;
+}
+.heart-button-active{
+  color: #1db954;
+}
+
+.spoticon-heart-16:before{
+  content: "\f322";
+  font-size: 16px;
+}
+[class*=" spoticon-"]:before{
+  font-family: glue1-spoticon;
+  font-style: normal;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  line-height: inherit;
+  vertical-align: bottom;
+  display: inline-block;
+  text-decoration: inherit;
+}
 
 .controller_center{
   width:40%;
