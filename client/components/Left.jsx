@@ -1,7 +1,7 @@
 import React from 'react';
-import { lolosHeartEmpty } from 'react-icons/io'
+import { FaBeer } from 'react-icons/fa'
 
-const Left = function(props){
+const Left = function({currentState,handleHeartClick}){
   return(
     <div className ='controller_left'>
       <div className = 'now-playing' role ='contentinfo' aria-label ="hi--place holder">
@@ -11,7 +11,7 @@ const Left = function(props){
               <div className = "cover-art-container">
                 <div className = "cover-art shadow">
                   <div>
-                    <img src ="https://song-for-fake-spotify.s3-us-west-1.amazonaws.com/Obsidian.png" className = "cover-art-image"/>
+                    <img src ={currentState.coverArt}className = "cover-art-image"/>
                   </div>
                 </div>
               </div>
@@ -23,7 +23,7 @@ const Left = function(props){
           <div className ="song-title" dir = 'auto'>
             <div className ="menu-wrapper">
               <span draggable="true">
-                <a className = "song-text">Hello World</a>
+                  <a className = "song-text">{currentState.songTitle}</a>
               </span>
             </div>
           </div>
@@ -31,14 +31,14 @@ const Left = function(props){
             <span>
               <span className="artistname-wrapper">
                 <span draggable="true">
-                  <a className= "artist-text">Hack React</a>
+                  <a className= "artist-text">{currentState.albumTitle}</a>
                 </span>
               </span>
             </span>
           </div>
         </div>
         <div className= "button-container">
-          <button className="heart-button spoticon-heart-16 heart-button-active">
+          <button className={currentState.heart} onClick={(event)=> handleHeartClick(event)}>
           </button>
         </div>
       </div>
