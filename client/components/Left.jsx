@@ -1,4 +1,5 @@
 import React from 'react';
+import { lolosHeartEmpty } from 'react-icons/io'
 
 const Left = function(props){
   return(
@@ -18,8 +19,28 @@ const Left = function(props){
           </div>
           <div></div>
         </div>
-        <div></div>
-        <div></div>
+        <div className = "song-title-container">
+          <div className ="song-title" dir = 'auto'>
+            <div className ="menu-wrapper">
+              <span draggable="true">
+                <a className = "song-text">Hello World</a>
+              </span>
+            </div>
+          </div>
+          <div className = "artist-name" dir= "auto">
+            <span>
+              <span className="artistname-wrapper">
+                <span draggable="true">
+                  <a className= "artist-text">Hack React</a>
+                </span>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div className= "button-container">
+          <button className="heart-button spoticon-heart-16 heart-button-active">
+          </button>
+        </div>
       </div>
     </div>
   )
