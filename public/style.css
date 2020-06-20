@@ -18,6 +18,10 @@ div, footer, a, span {
 body, button{
   font-family: spotify-circular,spotify-circular-cyrillic,spotify-circular-arabic,spotify-circular-hebrew,Helvetica Neue,Helvetica,Arial,Hiragino Kaku Gothic Pro,Meiryo,MS Gothic,sans-serif;
 }
+
+button:focus{
+  outline: none;
+}
 /*****************************************************************/
 .place-holder{
   height: calc(100vh - 90px);
@@ -189,23 +193,29 @@ a {
 .heart-button:hover{
   color:#fff;
 }
-.heart-button-active{
-  color: #1db954;
-}
-
-.spoticon-heart-16:before{
-  content: "\f322";
+.icon-heart:before{
+  content: "♡";
   font-size: 16px;
 }
-[class*=" spoticon-"]:before{
-  font-family: glue1-spoticon;
-  font-style: normal;
-  font-weight: 400;
-  -webkit-font-smoothing: antialiased;
-  line-height: inherit;
-  vertical-align: bottom;
-  display: inline-block;
-  text-decoration: inherit;
+
+.heart-button-active{
+  background-color: transparent;
+  border: none;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  position: relative;
+}
+.heart-button-active:hover{
+  color: #1ed760;
+}
+
+.icon-heart-active:before{
+  content:"♥︎";
+  font-size: 25px;
+}
+.icon-heart-active{
+  color:#1db954;
 }
 
 .controller_center{
