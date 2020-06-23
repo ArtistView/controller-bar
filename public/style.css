@@ -8,6 +8,7 @@ body{
   height: 100%;
   border: none;
 
+
 }
 div, footer, a, span {
   margin:0;
@@ -17,6 +18,10 @@ div, footer, a, span {
 }
 body, button{
   font-family: spotify-circular,spotify-circular-cyrillic,spotify-circular-arabic,spotify-circular-hebrew,Helvetica Neue,Helvetica,Arial,Hiragino Kaku Gothic Pro,Meiryo,MS Gothic,sans-serif;
+  color: #b3b3b3;
+  font-size: 14px;
+  line-height: 20px;
+  text-transform: none;
 }
 
 button:focus{
@@ -153,6 +158,10 @@ a {
 .song-text{
   position: relative;
 }
+.song-text:hover{
+  cursor: pointer;
+  text-decoration: underline;
+}
 .menu-wrapper{
   display: inline;
 }
@@ -174,6 +183,11 @@ a {
   color: #b3b3b3;
   position: relative;
 
+}
+.artist-text:hover{
+  cursor: pointer;
+  text-decoration: underline;
+  color: #fff;
 }
 
 /**************************** -Heart button- *************************************/
@@ -211,17 +225,250 @@ a {
 }
 
 .icon-heart-active:before{
-  content:"♥︎";
-  font-size: 25px;
+  content: '';
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size:16px;
 }
 .icon-heart-active{
   color:#1db954;
 }
 
+
+
+
+/**************************** -center component- *************************************/
 .controller_center{
   width:40%;
   max-width: 722px;
 }
+
+.controls-container{
+  display:flex;
+  -webkit-box-direction: normal;
+  -webkit-box-orient: vertical;
+  flex-direction: column;
+  -webkit-box-pack:center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+
+}
+.control-buttons{
+  margin-bottom: 12px;
+  width: 224px;
+  -webkit-box-pack:justify;
+  justify-content: space-between;
+  -webkit-box-orient: horizontal;
+  flex-flow: row nowrap;
+  display: flex;
+  -webkit-box-direction: normal;
+}
+
+.control-button-wrapper{
+  position: relative;
+}
+
+.control-button--active-dot:after{
+  position: absolute;
+  bottom:0;
+  left: 50%;
+  display: block;
+  width: 4px;
+  height: 4px;
+  content:"";
+  border-radius:50%;
+  background-color: #1db954;
+  transform: translateX(-50%);
+}
+
+.control-button:hover{
+  color: #fff;
+}
+.control-button{
+  background-color: transparent;
+  border: none;
+  color: #b3b3b3;
+  width:32px;
+  min-width:32px;
+  height: 32px;
+  position: relative;
+}
+.control-button--active:hover{
+  color: #1ed760;
+}
+.control-button--active{
+  color: #1db954;
+}
+.control-media-button-active{
+  color: #fff;
+}
+
+.repeat-icon:before{
+  content: '';
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size:16px;
+}
+.repeat-icon-twice:before{
+  content: '*1';
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size:16px;
+}
+.pause-icon:before{
+  content: "";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size:12px;
+}
+
+.shuffle-icon:before{
+  content: '';
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size:16px;
+}
+.skip-back-icon:before{
+  content:'';
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size:16px;
+}
+.skip-forward-icon:before{
+  content:'';
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size:16px;
+}
+
+
+.play-icon:before{
+  content:'';
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 12px;
+}
+.play-icon:hover:before{
+  content:'';
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 13px;
+  color: #fff;
+}
+.play-button-circle-active:after{
+  content: "";
+  position: absolute;
+  top:0;
+  right:0;
+  bottom: 0;
+  left:0;
+  border-radius: 500px;
+  border:1px solid hsla(0, 0%, 100%, .6);
+  border-color:#fff;
+}
+.play-button-circle:hover:after{
+  content: "";
+  position: absolute;
+  top:0;
+  right:0;
+  bottom: 0;
+  left:0;
+  border-radius:500px;
+  border:1px solid hsla(0, 0%, 100%, .6);
+  border-color:#fff;
+}
+
+.play-button-circle:after{
+  content: "";
+  position: absolute;
+  top:0;
+  right:0;
+  bottom: 0;
+  left:0;
+  border-radius: 500px;
+  border:1px solid hsla(0, 0%, 100%, .6);
+}
+
+.play-bar{
+  width: 100%;
+  display: flex;
+  -webkit-box-orient:horizontal;
+  -webkit-box-direction: normal;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  align-items: center;
+}
+.time-progress{
+  min-width: 40px;
+  text-align: center;
+}
+.left-time{
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+.progress-bar{
+  height: 12px;
+  position: relative;
+  width: 1000%;
+}
+.middle-align{
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.progress-bar__bg{
+  background-color: #535353;
+  border-radius: 2px;
+  display: flex;
+  display:-webkit-box;
+  display:-ms-flexbox;
+  height: 4px;
+  width: 100%;
+}
+.progress-bar-wrapper{
+  overflow: hidden;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+}
+.progress-bar-change{
+  background-color: #b3b3b3;
+  border-radius: 2px;
+  height: 4px;
+  width:100%;
+  -webkit-transform: translateX(-100%);
+  transform: translateX(-100%);
+}
+.progress-bar-slide{
+  background-color: #fff;
+  border:0;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  margin-left:-6px;
+  z-index: 100;
+  -webkit-box-shadow:0 2px 4px 0 rgba(0,0,0,.5);
+  box-shadow:0 2px 4px 0 rgba(0,0,0,.5);
+  opacity: 0;
+}
+
+
+.right-time{
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/**************************** -Right component- *************************************/
 .controller_right{
   width:30%;
   min-width: 180px;
