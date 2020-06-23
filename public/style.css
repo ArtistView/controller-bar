@@ -27,6 +27,15 @@ body, button{
 button:focus{
   outline: none;
 }
+h3{
+  display: block;
+  font-size: 1.17em;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
 /*****************************************************************/
 .place-holder{
   height: calc(100vh - 90px);
@@ -479,5 +488,199 @@ a {
   -webkit-box-pack: end;
   justify-content: flex-end;
 }
+.controller-right-inner{
+  width: 180px;
+}
+.right-controls{
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: end;
+  justify-content: flex-end;
+  -webkit-box-align: center;
+  align-items: center;
+}
 
+.control-button-wrapper{
+  position: relative;
+}
 
+.queue-icon:before{
+  content:'';
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.device-picker{
+  position: relative;
+}
+
+.device-icon:before{
+  content:'復';
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.connect-device-list-container{
+  position: absolute;
+  width: 280px;
+  bottom: 30px;
+  right: -121px;
+  display: none;
+  background: #282828;
+  border-radius: 5px;
+  z-index: 1002;
+  -webkit-box-shadow:0 4px 12px 4px rgba(0,0,0,.5);
+  box-shadow:0 4px 12px 4px rgba(0,0,0,.5);
+}
+.connect-device-list-container--is-visable{
+  display: block;
+  -webkit-animation: fadeIn 333ms cubic-bezier(.3,0,0,1);
+  animation: fadeIn 333ms cubic-bezier(.3,0,0,1);
+}
+.connect-device-list-container:before{
+  bottom: -20px;
+  left: auto;
+  right: 138px;
+  margin-left: -10px;
+  margin-right:-10px;
+  border:10px solid transparent;
+  border-top-color: #282828;
+  position: absolute;
+  content: "";
+}
+.connect-list{
+  padding:5px;
+  overflow-y: auto;
+  max-height: calc(100vh - 90px);
+}
+.connect-title{
+  position: relative;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+.connect-title-text{
+  display: block;
+  padding: 14px 35px 10px 14px;
+}
+
+.connect-title-help{
+  border: 0;
+  display: block;
+  position: absolute;
+  top: 10px;
+  max-width: 100%;
+  height: auto;
+  right:5px
+}
+.question-icon:before{
+  content:'';
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 16px;
+}
+.connect-header{
+  text-align: center;
+  padding: 16px 0;
+}
+.connect-image{
+  width: 180px;
+  border-radius: 40px;
+}
+.connect-info{
+  text-align: center;
+  padding: 0 15px 20px;
+}
+.connect-device-button{
+  margin-top: 16px;
+  background-color: #1db954;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 700;
+  letter-spacing: 1.76px;
+  text-transform: uppercase;
+  border:2px solid transparent;
+  border-radius: 500px;
+  color: #fff;
+  transition: all 33ms cubic-bezier(.3,0,0,1);
+  will-change: transform;
+  white-space: nowrap;
+  padding: 8px 34px;
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
+}
+.volume-bar{
+  -webkit-box-align: center;
+  align-items: center;
+  width: 136px;
+  display: flex;
+}
+
+.speaker-icon:before{
+  content:'';
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 16px;
+}
+.speaker-mute-icon:before{
+  content:'';
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 16px;
+}
+.speaker-mid-icon:before{
+  content:'';
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 16px;
+}
+.progress-bar{
+  height: 12px;
+  position: relative;
+  width: 100%;
+}
+.progress-bar__bg{
+  background-color: #535353;
+  border-radius: 2px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 4px;
+  width: 100%;
+}
+.middle-align{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.progress-bar__fg_wrapper{
+  overflow:hidden;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+}
+.progress-bar--is-active
+.progress-bar__fg{
+  background-color: #1db954;
+}
+.progress-bar--is-active
+.progress-bar__slider{
+  opacity: 1;
+}
+.progress-bar__slider{
+  background-color: #fff;
+  border:0;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  margin-left: -6;
+  z-index: 100;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);
+
+}
