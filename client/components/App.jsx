@@ -26,9 +26,67 @@ class App extends React.Component{
       repeatState:false,
       repeatOnce: false,
       repeatIcon:"control-button repeat-icon",
+      queueState:false,
+      queueWrapper:'control-button-wrapper',
+      queueIcon:"control-button queue-icon",
+      deviceState:false,
+      volumeState:false,
+      volumeIcon:"control-button speaker-icon",
+      volumeRight:{transform:'translateX(0%)'},
+      volumeLeft:{left:'100%'},
     }
   }
+  handleVolumeClick(event){
+    event.preventDefault();
+    if(this.state.volumeState===false){
+      this.setState({
+        volumeState:true,
+        volumeIcon:"control-button speaker-mute-icon",
+        volumeRight:{transform:'translateX(-100%)'},
+        volumeLeft:{left:'0%'},
+      })
+    }
+    if(this.state.volumeState===true){
+      this.setState({
+        volumeState:false,
+        volumeIcon:"control-button speaker-icon",
+        volumeRight:{transform:'translateX(0%)'},
+        volumeLeft:{left:'100%'},
+      })
+    }
+  }
+  handleDeviceClick(event){
+    event.preventDefault();
+    if(this.state.deviceState===false){
+      this.setState({
+        deviceState:true,
+      })
+    }
+    if(this.state.deviceState===true){
+      this.setState({
+        deviceState:false,
+      })
+    }
 
+  }
+
+  handleQueueClick(event){
+    event.preventDefault()
+    if(this.state.queueState===false){
+      this.setState({
+        queueState: true,
+        queueWrapper:"control-button-wrapper control-button--active-dot",
+        queueIcon:"control-button queue-icon control-button--active",
+      })
+    }
+    if(this.state.queueState===true){
+      this.setState({
+        queueState:false,
+        queueWrapper:'control-button-wrapper',
+        queueIcon:"control-button queue-icon",
+      })
+    }
+  }
 
   handleRepeatClick(event){
     event.preventDefault();
@@ -173,12 +231,13 @@ class App extends React.Component{
 
   }
 
+
   render(){
     return (
       <div className= 'controller-components'>
         <Left currentState= {this.state} handleHeartClick={this.handleHeartClick.bind(this)}/>
         <Center currentState={this.state} handleShuffleClick={this.handleShuffleClick.bind(this)} handleSkipBackClick= {this.handleSkipBackClick.bind(this)} handlePlayClick={this.handlePlayClick.bind(this)} handleSkipForwardClick={this.handleSkipForwardClick.bind(this)} handleRepeatClick={this.handleRepeatClick.bind(this)}/>
-        <Right/>
+        <Right currentState={this.state} handleQueueClick={this.handleQueueClick.bind(this)} handleDeviceClick={this.handleDeviceClick.bind(this)} handleVolumeClick={this.handleVolumeClick.bind(this)}/>
       </div>
     )
   }
