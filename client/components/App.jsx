@@ -32,29 +32,155 @@ class App extends React.Component{
       deviceState:false,
       volumeState:false,
       volumeIcon:"control-button speaker-icon",
-      volumeRight:{transform:'translateX(0%)'},
-      volumeLeft:{left:'100%'},
+      volumeValue: 0,
+      volumeProgress:"linear-gradient(90deg, #1db954 0%, #b3b3b3 0%)",
+      saveColor:"linear-gradient(90deg, #1db954 0%, #b3b3b3 0%)",
     }
   }
+
+  volumeRange(event){
+
+    var greenBar = event.target.value;
+    var color = "linear-gradient(90deg, #1db954 "+greenBar+"%, #b3b3b3 "+greenBar+"%)";
+    if(greenBar < 1){
+      this.setState({
+        volumeValue:event.target.value,
+        currentVolume:event.target.value,
+        volumeProgress: color,
+        saveColor:color,
+        volumeIcon: "control-button speaker-mute-icon",
+        mute: true,
+        mid:false,
+        loud:false,
+      })
+    }
+
+    if(greenBar <= 50 && greenBar > 1){
+      this.setState({
+        volumeValue:event.target.value,
+        currentVolume:event.target.value,
+        volumeProgress: color,
+        saveColor:color,
+        volumeIcon: "control-button speaker-mid-icon",
+        mute: false,
+        mid:true,
+        loud:false,
+      })
+    }
+
+    if(greenBar>50){
+      this.setState({
+        volumeValue:event.target.value,
+        currentVolume:event.target.value,
+        volumeProgress: color,
+        saveColor:color,
+        volumeIcon: "control-button speaker-icon",
+        mute: false,
+        mid:false,
+        loud:true,
+      })
+    }
+
+  }
+
   handleVolumeClick(event){
+
     event.preventDefault();
-    if(this.state.volumeState===false){
+    var setVol= this.state.currentVolume;
+    var setColor = this.state.saveColor;
+    var setIcon = this.state.volumeIcon;
+
+
+    if(this.state.mute ===this.state.mid || this.state.mid ===this.state.loud || this.state.mute ===this.state.loud){
+      if(setVol < 1){
+        this.setState({
+          volumeIcon: "control-button speaker-mute-icon",
+          mute: true,
+          mid:false,
+          loud:false,
+        })
+      }
+      if(setVol>1 && setVol<=50){
+        this.setState({
+            volumeIcon: "control-button speaker-mid-icon",
+            mute: false,
+            mid:true,
+            loud:false,
+          })
+      }
+      if(setVol>50){
+        this.setState({
+            volumeIcon: "control-button speaker-icon",
+            mute: false,
+            mid:false,
+            loud:true,
+          })
+      }
+    }
+
+
+    if(this.state.volumeState === false && this.state.mid ===false && this.state.loud===false && this.state.mute===true){
+      this.setState({
+        volumeIcon:"control-button speaker-icon",
+        volumeValue: 70,
+        volumeProgress:"linear-gradient(90deg, #1db954 70%, #b3b3b3 70%)",
+        mute: false,
+        mid:false,
+        loud:true,
+      })
+    }
+    if(this.state.volumeState === true && this.state.mid ===false && this.state.loud===false && this.state.mute===true){
+      this.setState({
+        volumeIcon:"control-button speaker-icon",
+        volumeValue: 70,
+        volumeProgress:"linear-gradient(90deg, #1db954 70%, #b3b3b3 70%)",
+        mute: false,
+        mid:false,
+        loud:true,
+      })
+    }
+
+    if(this.state.volumeState === false && this.state.mid ===true){
       this.setState({
         volumeState:true,
         volumeIcon:"control-button speaker-mute-icon",
-        volumeRight:{transform:'translateX(-100%)'},
-        volumeLeft:{left:'0%'},
+        volumeValue: 0,
+        volumeProgress:"linear-gradient(90deg, #1db954 0%, #b3b3b3 0%)",
       })
     }
-    if(this.state.volumeState===true){
+    if(this.state.volumeState === false && this.state.loud ===true){
+      this.setState({
+        volumeState:true,
+        volumeIcon:"control-button speaker-mute-icon",
+        volumeValue: 0,
+        volumeProgress:"linear-gradient(90deg, #1db954 0%, #b3b3b3 0%)",
+      })
+    }
+
+    if(this.state.volumeState===true && this.state.mid===true){
+      this.setState({
+        volumeState:false,
+        volumeIcon:"control-button speaker-mid-icon",
+        volumeValue:setVol,
+        volumeProgress:setColor,
+      })
+    }
+
+    if(this.state.volumeState===true && this.state.loud===true){
       this.setState({
         volumeState:false,
         volumeIcon:"control-button speaker-icon",
-        volumeRight:{transform:'translateX(0%)'},
-        volumeLeft:{left:'100%'},
+        volumeValue:setVol,
+        volumeProgress:setColor,
       })
     }
+
+
+
+
+
   }
+
   handleDeviceClick(event){
     event.preventDefault();
     if(this.state.deviceState===false){
@@ -132,14 +258,10 @@ class App extends React.Component{
         skipBackIcon:"control-button skip-back-icon",
       })
     }
-    // if(this.state.skipForwardState===true){
-    //   this.setState({
-    //     skipForwardState:false,
-    //     skipForwardIcon:"control-button skip-forward-icon",
-    //   })
-    // }
+
 
   }
+
   handlePlayClick(event){
     event.preventDefault();
     if(this.state.playState === false && this.state.pauseState === true){
@@ -180,13 +302,6 @@ class App extends React.Component{
         skipForwardIcon:"control-button skip-forward-icon",
       })
     }
-    // if(this.state.skipBackState===true){
-    //   this.setState({
-    //     skipBackState:false,
-    //     skipBackIcon:"control-button skip-back-icon",
-    //   })
-    // }
-
   }
 
 
@@ -237,7 +352,7 @@ class App extends React.Component{
       <div className= 'controller-components'>
         <Left currentState= {this.state} handleHeartClick={this.handleHeartClick.bind(this)}/>
         <Center currentState={this.state} handleShuffleClick={this.handleShuffleClick.bind(this)} handleSkipBackClick= {this.handleSkipBackClick.bind(this)} handlePlayClick={this.handlePlayClick.bind(this)} handleSkipForwardClick={this.handleSkipForwardClick.bind(this)} handleRepeatClick={this.handleRepeatClick.bind(this)}/>
-        <Right currentState={this.state} handleQueueClick={this.handleQueueClick.bind(this)} handleDeviceClick={this.handleDeviceClick.bind(this)} handleVolumeClick={this.handleVolumeClick.bind(this)}/>
+        <Right currentState={this.state} handleQueueClick={this.handleQueueClick.bind(this)} handleDeviceClick={this.handleDeviceClick.bind(this)} handleVolumeClick={this.handleVolumeClick.bind(this)} volumeRange={this.volumeRange.bind(this)}/>
       </div>
     )
   }

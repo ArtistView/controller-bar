@@ -1,7 +1,7 @@
 import React from 'react';
 import Connect from './Connect.jsx'
 
-const Right = function({currentState,handleQueueClick,handleDeviceClick,handleVolumeClick}){
+const Right = function({currentState,handleQueueClick,handleDeviceClick,handleVolumeClick,volumeRange}){
   return(
     <div className = 'controller_right'>
       <div className = "controller-right-inner">
@@ -19,13 +19,8 @@ const Right = function({currentState,handleQueueClick,handleDeviceClick,handleVo
           </div>
           <div className="volume-bar" dir= 'ltr'>
             <button className={currentState.volumeIcon} onClick={(event)=> handleVolumeClick(event)}></button>
-            <div className="progress-bar progress-bar--is-active">
-              <div className="middle-align progress-bar__bg">
-                <div className="progress-bar__fg_wrapper">
-                    <div className="progress-bar__fg" style={currentState.volumeRight}></div>
-                </div>
-                <button className=" middle-align progress-bar__slider" style={currentState.volumeLeft}></button>
-              </div>
+            <div className='input-wrapper'>
+              <input type="range" className ="input-bar" min="0" max = "100" value ={currentState.volumeValue} style={{background:currentState.volumeProgress}} onChange={volumeRange}/>
             </div>
           </div>
         </div>
