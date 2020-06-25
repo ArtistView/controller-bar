@@ -35,7 +35,7 @@ const Center= function({currentState,handleShuffleClick,handleSkipBackClick,hand
           <div className="time-progress right-time">3:25</div>
         </div>
       </div>
-    </div>
+    </div> 
   )
 }
 
