@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaBeer } from 'react-icons/fa'
 
-const Left = function({currentState,handleHeartClick}){
+const Left = function({currentState,handleHeartClick,handleWindowClick}){
   return(
     <div className ='controller_left'>
       <div className = 'now-playing' role ='contentinfo' aria-label ="hi--place holder">
@@ -40,6 +40,9 @@ const Left = function({currentState,handleHeartClick}){
         <div className= "button-container">
           <button className={currentState.heart} onClick={(event)=> handleHeartClick(event)}>
           </button>
+        </div>
+        <div className="window-player">
+          <button className={currentState.window} onClick={(event)=>handleWindowClick(event)}></button>
         </div>
       </div>
     </div>
