@@ -39,8 +39,13 @@ class App extends React.Component{
       volumeState:false,
       volumeIcon:"control-button speaker-icon",
       volumeValue: 0,
+      barMute:false,
+      mute: false,
+      mid:false,
+      loud:true,
       volumeProgress:"linear-gradient(90deg, #1db954 0%, #b3b3b3 0%)",
       saveColor:"linear-gradient(90deg, #1db954 0%, #b3b3b3 0%)",
+      playListEnded:false,
     }
 
 
@@ -76,15 +81,19 @@ class App extends React.Component{
 
   volumeRange(event){
 
+
+    var songPlay = this.state.readyToPlay;
     var greenBar = event.target.value;
     var color = "linear-gradient(90deg, #1db954 "+greenBar+"%, #b3b3b3 "+greenBar+"%)";
     if(greenBar < 1){
+      songPlay.muted=true;
       this.setState({
         volumeValue:event.target.value,
         currentVolume:event.target.value,
         volumeProgress: color,
         saveColor:color,
         volumeIcon: "control-button speaker-mute-icon",
+        barMute:true,
         mute: true,
         mid:false,
         loud:false,
@@ -92,6 +101,7 @@ class App extends React.Component{
     }
 
     if(greenBar <= 50 && greenBar > 1){
+      songPlay.muted = false;
       this.setState({
         volumeValue:event.target.value,
         currentVolume:event.target.value,
@@ -105,6 +115,7 @@ class App extends React.Component{
     }
 
     if(greenBar>50){
+      songPlay.muted = false;
       this.setState({
         volumeValue:event.target.value,
         currentVolume:event.target.value,
@@ -120,11 +131,11 @@ class App extends React.Component{
   }
 
   handleVolumeClick(event){
-
     event.preventDefault();
     var setVol= this.state.currentVolume;
     var setColor = this.state.saveColor;
     var setIcon = this.state.volumeIcon;
+    var songPlay = this.state.readyToPlay;
 
     //Catch in case states trip
     if(this.state.mute ===this.state.mid || this.state.mid ===this.state.loud || this.state.mute ===this.state.loud){
@@ -158,7 +169,8 @@ class App extends React.Component{
     }
 
     //mute volume state
-    if(this.state.volumeState === false && this.state.mid ===false && this.state.loud===false && this.state.mute===true){
+    if(this.state.volumeState === false && this.state.mid ===false && this.state.loud===false && this.state.mute===true && this.state.barMute===false){
+      songPlay.muted= true;
       this.setState({
         volumeState:false,
         volumeIcon:"control-button speaker-icon",
@@ -170,6 +182,7 @@ class App extends React.Component{
       })
     }
     if(this.state.volumeState === true && this.state.mid ===false && this.state.loud===false && this.state.mute===true){
+      songPlay.muted = false;
       this.setState({
         volumeState:false,
         volumeIcon:"control-button speaker-icon",
@@ -180,8 +193,23 @@ class App extends React.Component{
         loud:true,
       })
     }
+
+    if(this.state.volumeState === false && this.state.mid ===false && this.state.loud===false && this.state.mute===true && this.state.barMute ===true){
+      songPlay.muted= false;
+      this.setState({
+        volumeState:false,
+        volumeIcon:"control-button speaker-icon",
+        volumeValue: 70,
+        volumeProgress:"linear-gradient(90deg, #1db954 70%, #b3b3b3 70%)",
+        barMute:false,
+        mute: false,
+        mid:false,
+        loud:true,
+      })
+    }
     //mid-level volume state
     if(this.state.volumeState === false && this.state.mid ===true && this.state.loud===false && this.state.mute===false){
+      songPlay.muted=true;
       this.setState({
         volumeState:true,
         volumeIcon:"control-button speaker-mute-icon",
@@ -190,6 +218,7 @@ class App extends React.Component{
       })
     }
     if(this.state.volumeState===true && this.state.mid===true && this.state.loud===false && this.state.mute===false){
+      songPlay.muted=false;
       this.setState({
         volumeState:false,
         volumeIcon:"control-button speaker-mid-icon",
@@ -200,6 +229,7 @@ class App extends React.Component{
 
     //loud-level volume state
     if(this.state.volumeState === false && this.state.loud ===true && this.state.mid===false && this.state.mute===false){
+      songPlay.muted=true;
       this.setState({
         volumeState:true,
         volumeIcon:"control-button speaker-mute-icon",
@@ -210,6 +240,7 @@ class App extends React.Component{
 
 
     if(this.state.volumeState===true && this.state.loud===true && this.state.mid===false && this.state.mute===false){
+      songPlay.muted=false;
       this.setState({
         volumeState:false,
         volumeIcon:"control-button speaker-icon",
@@ -286,11 +317,12 @@ class App extends React.Component{
 
   handleSkipForwardClick(event){
     event.preventDefault();
+    // console.log(this.state.playState+" "+this.state.pauseState+' '+this.state.skipForwardState+' '+this.state.skipBackState+' '+this.state.currentIndex)
     var nextIndex = this.state.currentIndex + 1;
     var nextSong = this.state.songs[nextIndex];
     var nextSongDefined = true;
 
-    if(nextSong===undefined && nextIndex=== this.state.songs.length){
+    if(nextSong===undefined && nextIndex=== this.state.songs.length && this.state.playState===true){
       nextSongDefined=false;
       this.setState({
         skipForwardState:false,
@@ -304,19 +336,72 @@ class App extends React.Component{
       })
     }
 
+    if(nextSong===undefined && nextIndex=== this.state.songs.length && this.state.pauseState===true){
+      nextSongDefined=false;
+      this.setState({
+        skipForwardState:false,
+        skipForwardIcon:"control-button skip-forward-icon",
+        playState: false,
+        pauseState:true,
+        playIcon: "control-button play-icon  play-button-circle",
+        skipBackState:false,
+        skipBackIcon:"control-button skip-back-icon",
+        currentIndex:nextIndex-1,
+      })
+    }
 
     if(this.state.skipForwardState===false && this.state.playState===false && this.state.skipBackState===false && this.state.pauseState===true && nextSongDefined===true){
-      var nextIndex = this.state.currentIndex + 1;
-      var nextSong = this.state.songs[nextIndex];
 
       var nextTitle = nextSong.title;
       var nextUrl = nextSong.mp3;
       var songPlay = new Audio(nextUrl);
       songPlay.play();
+
+
+      songPlay.addEventListener('ended',(e)=>{
+        var nextIndex = this.state.currentIndex + 1;
+        var nextSong = this.state.songs[nextIndex];
+
+        if(nextSong===undefined && nextIndex === this.state.songs.length){
+          var index = 0;
+          var song = this.state.songs[index];
+          var songUrl = song.mp3;
+          var songToPlay = new Audio(songUrl);
+          this.setState({
+            skipForwardState:false,
+            skipForwardIcon:"control-button skip-forward-icon",
+            playState: false,
+            pauseState:true,
+            playIcon: "control-button play-icon  play-button-circle",
+            skipBackState:false,
+            skipBackIcon:"control-button skip-back-icon",
+            currentIndex:index,
+            playListEnded: true,
+            readyToPlay:songToPlay,
+          })
+        }
+
+        var nextTitle = nextSong.title;
+        var nextUrl = nextSong.mp3;
+        var nextPlay = new Audio(nextUrl);
+        nextPlay.play();
+        this.setState({
+                songTitle:nextTitle,
+                skipForwardState:true,
+                skipForwardIcon:"control-button skip-forward-icon",
+                playState: true,
+                pauseState:false,
+                playIcon: "control-button pause-icon play-button-circle",
+                skipBackState:false,
+                skipBackIcon:"control-button skip-back-icon",
+                readyToPlay:nextPlay,
+                currentIndex:nextIndex,
+              })
+      })
       this.setState({
             songTitle:nextTitle,
             skipForwardState:true,
-            skipForwardIcon:"control-button skip-forward-icon control-media-button-active",
+            skipForwardIcon:"control-button skip-forward-icon",
             playState: true,
             pauseState:false,
             playIcon: "control-button pause-icon play-button-circle",
@@ -329,8 +414,6 @@ class App extends React.Component{
 
     if(this.state.skipForwardState===false && this.state.playState===true && this.state.skipBackState===false && this.state.pauseState===false && nextSongDefined===true)
     {
-      var nextIndex = this.state.currentIndex + 1;
-      var nextSong = this.state.songs[nextIndex];
 
       var playingSong = this.state.readyToPlay;
       playingSong.pause();
@@ -338,10 +421,53 @@ class App extends React.Component{
       var nextUrl = nextSong.mp3;
       var songPlay = new Audio(nextUrl);
       songPlay.play();
+
+      songPlay.addEventListener('ended',(e)=>{
+        var nextIndex = this.state.currentIndex + 1;
+        var nextSong = this.state.songs[nextIndex];
+
+        if(nextSong===undefined && nextIndex === this.state.songs.length){
+          var index = 0;
+          var song = this.state.songs[index];
+          var songUrl = song.mp3;
+          var songToPlay = new Audio(songUrl);
+          this.setState({
+            skipForwardState:false,
+            skipForwardIcon:"control-button skip-forward-icon",
+            playState: false,
+            pauseState:true,
+            playIcon: "control-button play-icon  play-button-circle",
+            skipBackState:false,
+            skipBackIcon:"control-button skip-back-icon",
+            currentIndex:index,
+            playListEnded: true,
+            readyToPlay:songToPlay,
+          })
+        }
+
+        var nextTitle = nextSong.title;
+        var nextUrl = nextSong.mp3;
+        var nextPlay = new Audio(nextUrl);
+        nextPlay.play();
+        this.setState({
+                songTitle:nextTitle,
+                skipForwardState:true,
+                skipForwardIcon:"control-button skip-forward-icon",
+                playState: true,
+                pauseState:false,
+                playIcon: "control-button pause-icon play-button-circle",
+                skipBackState:false,
+                skipBackIcon:"control-button skip-back-icon",
+                readyToPlay:nextPlay,
+                currentIndex:nextIndex,
+              })
+      })
+
+
       this.setState({
             songTitle:nextTitle,
             skipForwardState:true,
-            skipForwardIcon:"control-button skip-forward-icon control-media-button-active",
+            skipForwardIcon:"control-button skip-forward-icon ",
             playState: true,
             pauseState:false,
             playIcon: "control-button pause-icon play-button-circle",
@@ -353,10 +479,6 @@ class App extends React.Component{
     }
 
     if(this.state.skipForwardState===true && this.state.playState===true && this.state.skipBackState===false && this.state.pauseState===false && nextSongDefined===true){
-
-      var nextIndex = this.state.currentIndex + 1;
-      var nextSong = this.state.songs[nextIndex];
-
       var playingSong = this.state.readyToPlay;
       playingSong.pause();
 
@@ -364,10 +486,51 @@ class App extends React.Component{
       var nextUrl = nextSong.mp3;
       var songPlay = new Audio(nextUrl);
       songPlay.play();
+
+      songPlay.addEventListener('ended',(e)=>{
+        var nextIndex = this.state.currentIndex + 1;
+        var nextSong = this.state.songs[nextIndex];
+
+        if(nextSong===undefined && nextIndex === this.state.songs.length){
+          var index = 0;
+          var song = this.state.songs[index];
+          var songUrl = song.mp3;
+          var songToPlay = new Audio(songUrl);
+          this.setState({
+            skipForwardState:false,
+            skipForwardIcon:"control-button skip-forward-icon",
+            playState: false,
+            pauseState:true,
+            playIcon: "control-button play-icon  play-button-circle",
+            skipBackState:false,
+            skipBackIcon:"control-button skip-back-icon",
+            currentIndex:index,
+            playListEnded: true,
+            readyToPlay:songToPlay,
+          })
+        }
+
+        var nextTitle = nextSong.title;
+        var nextUrl = nextSong.mp3;
+        var nextPlay = new Audio(nextUrl);
+        nextPlay.play();
+        this.setState({
+                songTitle:nextTitle,
+                skipForwardState:false,
+                skipForwardIcon:"control-button skip-forward-icon",
+                playState: true,
+                pauseState:false,
+                playIcon: "control-button pause-icon play-button-circle",
+                skipBackState:false,
+                skipBackIcon:"control-button skip-back-icon",
+                readyToPlay:nextPlay,
+                currentIndex:nextIndex,
+              })
+      })
       this.setState({
             songTitle:nextTitle,
             skipForwardState:false,
-            skipForwardIcon:"control-button skip-forward-icon control-media-button-active",
+            skipForwardIcon:"control-button skip-forward-icon ",
             playState: true,
             pauseState:false,
             playIcon: "control-button pause-icon play-button-circle",
@@ -378,11 +541,10 @@ class App extends React.Component{
           })
 
     }
+
+
+
     if(this.state.skipForwardState===false && this.state.playState===true && this.state.skipBackState===true && this.state.pauseState===false && nextSongDefined===true){
-
-      var nextIndex = this.state.currentIndex + 1;
-      var nextSong = this.state.songs[nextIndex];
-
       var playingSong = this.state.readyToPlay;
       playingSong.pause();
 
@@ -390,10 +552,52 @@ class App extends React.Component{
       var nextUrl = nextSong.mp3;
       var songPlay = new Audio(nextUrl);
       songPlay.play();
+
+      songPlay.addEventListener('ended',(e)=>{
+        var nextIndex = this.state.currentIndex + 1;
+        var nextSong = this.state.songs[nextIndex];
+
+        if(nextSong===undefined && nextIndex === this.state.songs.length){
+          var index = 0;
+          var song = this.state.songs[index];
+          var songUrl = song.mp3;
+          var songToPlay = new Audio(songUrl);
+          this.setState({
+            skipForwardState:false,
+            skipForwardIcon:"control-button skip-forward-icon",
+            playState: false,
+            pauseState:true,
+            playIcon: "control-button play-icon  play-button-circle",
+            skipBackState:false,
+            skipBackIcon:"control-button skip-back-icon",
+            currentIndex:index,
+            playListEnded: true,
+            readyToPlay:songToPlay,
+          })
+        }
+
+        var nextTitle = nextSong.title;
+        var nextUrl = nextSong.mp3;
+        var nextPlay = new Audio(nextUrl);
+        nextPlay.play();
+        this.setState({
+                songTitle:nextTitle,
+                skipForwardState:false,
+                skipForwardIcon:"control-button skip-forward-icon",
+                playState: true,
+                pauseState:false,
+                playIcon: "control-button pause-icon play-button-circle",
+                skipBackState:false,
+                skipBackIcon:"control-button skip-back-icon",
+                readyToPlay:nextPlay,
+                currentIndex:nextIndex,
+              })
+      })
+
       this.setState({
             songTitle:nextTitle,
             skipForwardState:false,
-            skipForwardIcon:"control-button skip-forward-icon control-media-button-active",
+            skipForwardIcon:"control-button skip-forward-icon",
             playState: true,
             pauseState:false,
             playIcon: "control-button pause-icon play-button-circle",
@@ -412,23 +616,133 @@ class App extends React.Component{
   handlePlayClick(event){
     event.preventDefault();
 
-
+    //console.log(this.state.playState+" "+this.state.pauseState+' '+this.state.skipForwardState+' '+this.state.skipBackState)
     var songPlay = this.state.readyToPlay;
 
 
-    if(this.state.playState === false && this.state.pauseState === true && this.state.skipForwardState===false && this.state.skipBackState===false){
+    if(this.state.playState === false && this.state.pauseState === true && this.state.skipForwardState===false && this.state.skipBackState===false && this.state.playListEnded===false){
+
       songPlay.play();
+      // songPlay.addEventListener('timeupdate',(e)=>{
+      //   console.log('time updated')
+      // })
+
+      songPlay.addEventListener('ended',(e)=>{
+        console.log('song ended')
+        var nextIndex = this.state.currentIndex + 1;
+        var nextSong = this.state.songs[nextIndex];
+
+        if(nextSong===undefined && nextIndex === this.state.songs.length){
+          console.log('in undefined')
+          var index = 0;
+          var song = this.state.songs[index];
+          var songUrl = song.mp3;
+          var songToPlay = new Audio(songUrl);
+          this.setState({
+            skipForwardState:false,
+            skipForwardIcon:"control-button skip-forward-icon",
+            playState: false,
+            pauseState:true,
+            playIcon: "control-button play-icon  play-button-circle",
+            skipBackState:false,
+            skipBackIcon:"control-button skip-back-icon",
+            currentIndex:index,
+            playListEnded: true,
+            readyToPlay:songToPlay,
+          })
+        }
+
+        var nextTitle = nextSong.title;
+        var nextUrl = nextSong.mp3;
+        var nextPlay = new Audio(nextUrl);
+        nextPlay.play();
+        this.setState({
+                songTitle:nextTitle,
+                skipForwardState:false,
+                skipForwardIcon:"control-button skip-forward-icon ",
+                playState: true,
+                pauseState:false,
+                playIcon: "control-button pause-icon play-button-circle",
+                skipBackState:false,
+                skipBackIcon:"control-button skip-back-icon",
+                readyToPlay:nextPlay,
+                currentIndex:nextIndex,
+              })
+      })
+
       this.setState({
         playState:true,
-        playIcon:"control-button pause-icon play-button-circle-active control-media-button-active",
+        playIcon:"control-button pause-icon play-button-circle-active",
         pauseState: false,
         skipBackState:false,
         skipBackIcon:"control-button skip-back-icon",
         skipForwardState:false,
         skipForwardIcon:"control-button skip-forward-icon",
       })
+    }
+
+    if(this.state.playState === false && this.state.pauseState === true && this.state.skipForwardState===false && this.state.skipBackState===false&& this.state.playListEnded===true){
+      var song = this.state.songs[0];
+      var songTitle = song.title;
+      songPlay.play();
+
+
+      songPlay.addEventListener('ended',(e)=>{
+        console.log('song ended')
+        var nextIndex = this.state.currentIndex + 1;
+        var nextSong = this.state.songs[nextIndex];
+
+        if(nextSong===undefined && nextIndex === this.state.songs.length){
+          var index = 0;
+          var song = this.state.songs[index];
+          var songUrl = song.mp3;
+          var songToPlay = new Audio(songUrl);
+          this.setState({
+            skipForwardState:false,
+            skipForwardIcon:"control-button skip-forward-icon",
+            playState: false,
+            pauseState:true,
+            playIcon: "control-button play-icon  play-button-circle",
+            skipBackState:false,
+            skipBackIcon:"control-button skip-back-icon",
+            currentIndex:index,
+            playListEnded: true,
+            readyToPlay:songToPlay,
+          })
+        }
+
+        var nextTitle = nextSong.title;
+        var nextUrl = nextSong.mp3;
+        var songPlay = new Audio(nextUrl);
+        songPlay.play();
+        this.setState({
+                songTitle:nextTitle,
+                skipForwardState:false,
+                skipForwardIcon:"control-button skip-forward-icon",
+                playState: true,
+                pauseState:false,
+                playIcon: "control-button pause-icon play-button-circle",
+                skipBackState:false,
+                skipBackIcon:"control-button skip-back-icon",
+                readyToPlay:songPlay,
+                currentIndex:nextIndex,
+              })
+      })
+
+      this.setState({
+        songTitle:songTitle,
+        playState:true,
+        playIcon:"control-button pause-icon play-button-circle-active",
+        pauseState: false,
+        skipBackState:false,
+        skipBackIcon:"control-button skip-back-icon",
+        skipForwardState:false,
+        skipForwardIcon:"control-button skip-forward-icon",
+        playListEnded:false,
+      })
 
     }
+
     if(this.state.playState=== true && this.state.pauseState === false && this.state.skipBackState===false && this.state.skipForwardState===false){
       songPlay.pause();
       this.setState({
@@ -441,6 +755,7 @@ class App extends React.Component{
         skipForwardIcon:"control-button skip-forward-icon",
       })
     }
+
     if(this.state.playState=== true && this.state.pauseState === false && this.state.skipBackState===false && this.state.skipForwardState===true){
       songPlay.pause();
       this.setState({
@@ -453,6 +768,7 @@ class App extends React.Component{
         skipForwardIcon:"control-button skip-forward-icon",
       })
     }
+
     if(this.state.playState=== true && this.state.pauseState === false && this.state.skipBackState===true && this.state.skipForwardState===false){
       songPlay.pause();
       this.setState({
@@ -465,17 +781,16 @@ class App extends React.Component{
         skipForwardIcon:"control-button skip-forward-icon",
       })
     }
+
   }
 
   handleSkipBackClick(event){
     event.preventDefault()
-    console.log(this.state.playState+" "+this.state.pauseState+" "+this.state.skipBackState+' '+this.state.skipForwardState)
     var prevIndex = this.state.currentIndex - 1;
     var prevSong = this.state.songs[prevIndex];
     var prevSongDefined = true;
 
     if(prevSong===undefined && this.state.pauseState===true){
-      console.log('works')
       prevSongDefined=false;
       this.setState({
         skipForwardState:false,
@@ -509,10 +824,53 @@ class App extends React.Component{
       var prevUrl = prevSong.mp3;
       var songPlay = new Audio(prevUrl);
       songPlay.play();
+
+      songPlay.addEventListener('ended',(e)=>{
+        var nextIndex = this.state.currentIndex + 1;
+        var nextSong = this.state.songs[nextIndex];
+
+        if(nextSong===undefined && nextIndex === this.state.songs.length){
+          var index = 0;
+          var song = this.state.songs[index];
+          var songUrl = song.mp3;
+          var songToPlay = new Audio(songUrl);
+          this.setState({
+            skipForwardState:false,
+            skipForwardIcon:"control-button skip-forward-icon",
+            playState: false,
+            pauseState:true,
+            playIcon: "control-button play-icon  play-button-circle",
+            skipBackState:false,
+            skipBackIcon:"control-button skip-back-icon",
+            currentIndex:index,
+            playListEnded: true,
+            readyToPlay:songToPlay,
+          })
+        }
+
+        var nextTitle = nextSong.title;
+        var nextUrl = nextSong.mp3;
+        var nextPlay = new Audio(nextUrl);
+        nextPlay.play();
+        this.setState({
+                songTitle:nextTitle,
+                skipForwardState:false,
+                skipForwardIcon:"control-button skip-forward-icon",
+                playState: true,
+                pauseState:false,
+                playIcon: "control-button pause-icon play-button-circle",
+                skipBackState:true,
+                skipBackIcon:"control-button skip-back-icon",
+                readyToPlay:nextPlay,
+                currentIndex:nextIndex,
+              })
+      })
+
+
       this.setState({
             songTitle:prevTitle,
             skipForwardState:false,
-            skipForwardIcon:"control-button skip-forward-icon control-media-button-active",
+            skipForwardIcon:"control-button skip-forward-icon",
             playState: true,
             pauseState:false,
             playIcon: "control-button pause-icon play-button-circle",
@@ -525,16 +883,60 @@ class App extends React.Component{
 
     if(this.state.skipForwardState===false && this.state.playState===true && this.state.skipBackState===false && this.state.pauseState===false && prevSongDefined===true)
     {
+
       var playingSong = this.state.readyToPlay;
       playingSong.pause();
       var prevTitle = prevSong.title;
       var prevUrl = prevSong.mp3;
       var songPlay = new Audio(prevUrl);
       songPlay.play();
+
+      songPlay.addEventListener('ended',(e)=>{
+        var nextIndex = this.state.currentIndex + 1;
+        var nextSong = this.state.songs[nextIndex];
+
+        if(nextSong===undefined && nextIndex === this.state.songs.length){
+          var index = 0;
+          var song = this.state.songs[index];
+          var songUrl = song.mp3;
+          var songToPlay = new Audio(songUrl);
+          this.setState({
+            skipForwardState:false,
+            skipForwardIcon:"control-button skip-forward-icon",
+            playState: false,
+            pauseState:true,
+            playIcon: "control-button play-icon  play-button-circle",
+            skipBackState:false,
+            skipBackIcon:"control-button skip-back-icon",
+            currentIndex:index,
+            playListEnded: true,
+            readyToPlay:songToPlay,
+          })
+        }
+
+        var nextTitle = nextSong.title;
+        var nextUrl = nextSong.mp3;
+        var nextPlay = new Audio(nextUrl);
+        nextPlay.play();
+        this.setState({
+                songTitle:nextTitle,
+                skipForwardState:false,
+                skipForwardIcon:"control-button skip-forward-icon",
+                playState: true,
+                pauseState:false,
+                playIcon: "control-button pause-icon play-button-circle",
+                skipBackState:true,
+                skipBackIcon:"control-button skip-back-icon",
+                readyToPlay:nextPlay,
+                currentIndex:nextIndex,
+              })
+      })
+
+
       this.setState({
             songTitle:prevTitle,
             skipForwardState:false,
-            skipForwardIcon:"control-button skip-forward-icon control-media-button-active",
+            skipForwardIcon:"control-button skip-forward-icon",
             playState: true,
             pauseState:false,
             playIcon: "control-button pause-icon play-button-circle",
@@ -546,17 +948,58 @@ class App extends React.Component{
     }
 
     if(this.state.skipForwardState===false && this.state.playState===true && this.state.skipBackState===true && this.state.pauseState===false && prevSongDefined===true){
-
       var playingSong = this.state.readyToPlay;
       playingSong.pause();
       var prevTitle = prevSong.title;
       var prevUrl = prevSong.mp3;
       var songPlay = new Audio(prevUrl);
       songPlay.play();
+
+      songPlay.addEventListener('ended',(e)=>{
+        var nextIndex = this.state.currentIndex + 1;
+        var nextSong = this.state.songs[nextIndex];
+
+        if(nextSong===undefined && nextIndex === this.state.songs.length){
+          var index = 0;
+          var song = this.state.songs[index];
+          var songUrl = song.mp3;
+          var songToPlay = new Audio(songUrl);
+          this.setState({
+            skipForwardState:false,
+            skipForwardIcon:"control-button skip-forward-icon",
+            playState: false,
+            pauseState:true,
+            playIcon: "control-button play-icon  play-button-circle",
+            skipBackState:false,
+            skipBackIcon:"control-button skip-back-icon",
+            currentIndex:index,
+            playListEnded: true,
+            readyToPlay:songToPlay,
+          })
+        }
+
+        var nextTitle = nextSong.title;
+        var nextUrl = nextSong.mp3;
+        var nextPlay = new Audio(nextUrl);
+        nextPlay.play();
+        this.setState({
+                songTitle:nextTitle,
+                skipForwardState:false,
+                skipForwardIcon:"control-button skip-forward-icon",
+                playState: true,
+                pauseState:false,
+                playIcon: "control-button pause-icon play-button-circle",
+                skipBackState:false,
+                skipBackIcon:"control-button skip-back-icon",
+                readyToPlay:nextPlay,
+                currentIndex:nextIndex,
+              })
+      })
+
       this.setState({
             songTitle:prevTitle,
             skipForwardState:false,
-            skipForwardIcon:"control-button skip-forward-icon control-media-button-active",
+            skipForwardIcon:"control-button skip-forward-icon",
             playState: true,
             pauseState:false,
             playIcon: "control-button pause-icon play-button-circle",
@@ -570,17 +1013,56 @@ class App extends React.Component{
 
 
     if(this.state.skipForwardState===true && this.state.playState===true && this.state.skipBackState===false && this.state.pauseState===false && prevSongDefined===true){
-
       var playingSong = this.state.readyToPlay;
       playingSong.pause();
       var prevTitle = prevSong.title;
       var prevUrl = prevSong.mp3;
       var songPlay = new Audio(prevUrl);
       songPlay.play();
+      songPlay.addEventListener('ended',(e)=>{
+        var nextIndex = this.state.currentIndex + 1;
+        var nextSong = this.state.songs[nextIndex];
+
+        if(nextSong===undefined && nextIndex === this.state.songs.length){
+          var index = 0;
+          var song = this.state.songs[index];
+          var songUrl = song.mp3;
+          var songToPlay = new Audio(songUrl);
+          this.setState({
+            skipForwardState:false,
+            skipForwardIcon:"control-button skip-forward-icon",
+            playState: false,
+            pauseState:true,
+            playIcon: "control-button play-icon  play-button-circle",
+            skipBackState:false,
+            skipBackIcon:"control-button skip-back-icon",
+            currentIndex:index,
+            playListEnded: true,
+            readyToPlay:songToPlay,
+          })
+        }
+
+        var nextTitle = nextSong.title;
+        var nextUrl = nextSong.mp3;
+        var nextPlay = new Audio(nextUrl);
+        nextPlay.play();
+        this.setState({
+                songTitle:nextTitle,
+                skipForwardState:false,
+                skipForwardIcon:"control-button skip-forward-icon",
+                playState: true,
+                pauseState:false,
+                playIcon: "control-button pause-icon play-button-circle",
+                skipBackState:false,
+                skipBackIcon:"control-button skip-back-icon",
+                readyToPlay:nextPlay,
+                currentIndex:nextIndex,
+              })
+      })
       this.setState({
             songTitle:prevTitle,
             skipForwardState:false,
-            skipForwardIcon:"control-button skip-forward-icon control-media-button-active",
+            skipForwardIcon:"control-button skip-forward-icon",
             playState: true,
             pauseState:false,
             playIcon: "control-button pause-icon play-button-circle",
