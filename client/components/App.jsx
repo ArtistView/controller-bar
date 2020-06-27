@@ -46,6 +46,8 @@ class App extends React.Component{
       volumeProgress:"linear-gradient(90deg, #1db954 0%, #b3b3b3 0%)",
       saveColor:"linear-gradient(90deg, #1db954 0%, #b3b3b3 0%)",
       playListEnded:false,
+      songDuration:'0:00',
+      currentSongTime: '0:00',
     }
 
 
@@ -70,6 +72,7 @@ class App extends React.Component{
                 songs:arr,
                 songTitle: arr[0].title,
                 readyToPlay: new Audio(arr[0].mp3),
+                songDuration: arr[0].time,
               })
 
             })
@@ -80,6 +83,7 @@ class App extends React.Component{
   }
 
   volumeRange(event){
+    //console.log(this.state.playState+" "+this.state.pauseState+' '+this.state.skipForwardState+' '+this.state.skipBackState)
 
 
     var songPlay = this.state.readyToPlay;
@@ -131,6 +135,7 @@ class App extends React.Component{
   }
 
   handleVolumeClick(event){
+    //console.log(this.state.playState+" "+this.state.pauseState+' '+this.state.skipForwardState+' '+this.state.skipBackState)
     event.preventDefault();
     var setVol= this.state.currentVolume;
     var setColor = this.state.saveColor;
@@ -317,9 +322,12 @@ class App extends React.Component{
 
   handleSkipForwardClick(event){
     event.preventDefault();
-    // console.log(this.state.playState+" "+this.state.pauseState+' '+this.state.skipForwardState+' '+this.state.skipBackState+' '+this.state.currentIndex)
+    //console.log(this.state.playState+" "+this.state.pauseState+' '+this.state.skipForwardState+' '+this.state.skipBackState+' '+this.state.currentIndex)
+    var playingSong = this.state.readyToPlay;
+
     var nextIndex = this.state.currentIndex + 1;
     var nextSong = this.state.songs[nextIndex];
+
     var nextSongDefined = true;
 
     if(nextSong===undefined && nextIndex=== this.state.songs.length && this.state.playState===true){
@@ -351,11 +359,69 @@ class App extends React.Component{
     }
 
     if(this.state.skipForwardState===false && this.state.playState===false && this.state.skipBackState===false && this.state.pauseState===true && nextSongDefined===true){
-
+      playingSong.pause();
       var nextTitle = nextSong.title;
       var nextUrl = nextSong.mp3;
+      var nextDuration=nextSong.time;
       var songPlay = new Audio(nextUrl);
       songPlay.play();
+      songPlay.addEventListener('timeupdate',(event)=>{
+        var timeChange = songPlay.currentTime
+          var fixed = timeChange.toFixed(1)
+          if(timeChange > 1){
+            var renderTime ="0:00"
+            var cutTimeNum= timeChange.toFixed(1)
+            var splitNum = cutTimeNum.split('.');
+            var duration = Number(splitNum[0]);
+            if(duration<10){
+              renderTime= "0:0"+duration
+            }
+            if(duration >= 10 && duration < 60){
+              renderTime="0:"+duration
+            }
+            if(duration >=60){
+              if(duration===60){
+                renderTime="1:00"
+              }
+              else if((duration%60)===0)
+              {
+                  var min = (duration/60)
+                  if(min<10){
+                    renderTime= min+":00"
+                  }else{
+                    renderTime= min+":00"
+                  }
+              }
+              else{
+                var findMin = (duration/60)
+
+                if(findMin<10){
+                  var min= findMin.toString().split('.')[0]+":";
+                  var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  if(sec >= 10 && sec < 60){
+                  var strSec ="0"+sec;
+                  renderTime= min+sec;
+                  }
+                  if(sec<10){
+                    renderTime=min+"0"+sec;
+                  }
+
+                }
+
+              }
+
+            }
+          }
+          if(renderTime!=undefined){
+          this.setState({
+            currentSongTime:renderTime,
+          })
+
+        }
+
+      })
 
 
       songPlay.addEventListener('ended',(e)=>{
@@ -380,11 +446,70 @@ class App extends React.Component{
             readyToPlay:songToPlay,
           })
         }
-
+        playingSong.pause();
         var nextTitle = nextSong.title;
         var nextUrl = nextSong.mp3;
+        var nextTime = nextSong.time;
         var nextPlay = new Audio(nextUrl);
         nextPlay.play();
+        nextPlay.addEventListener('timeupdate',(event)=>{
+          var timeChange = nextPlay.currentTime
+            var fixed = timeChange.toFixed(1)
+            if(timeChange > 1){
+              var renderTime ="0:00"
+              var cutTimeNum= timeChange.toFixed(1)
+              var splitNum = cutTimeNum.split('.');
+              var duration = Number(splitNum[0]);
+              if(duration<10){
+                renderTime= "0:0"+duration
+              }
+              if(duration >= 10 && duration < 60){
+                renderTime="0:"+duration
+              }
+              if(duration >=60){
+                if(duration===60){
+                  renderTime="1:00"
+                }
+                else if((duration%60)===0)
+                {
+                    var min = (duration/60)
+                    if(min<10){
+                      renderTime= min+":00"
+                    }else{
+                      renderTime= min+":00"
+                    }
+                }
+                else{
+                  var findMin = (duration/60)
+
+                  if(findMin<10){
+                    var min= findMin.toString().split('.')[0]+":";
+                    var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    if(sec >= 10 && sec < 60){
+                    var strSec ="0"+sec;
+                    renderTime= min+sec;
+                    }
+                    if(sec<10){
+                      renderTime=min+"0"+sec;
+                    }
+
+                  }
+
+                }
+
+              }
+            }
+            if(renderTime!=undefined){
+            this.setState({
+              currentSongTime:renderTime,
+            })
+
+          }
+
+        })
+
         this.setState({
                 songTitle:nextTitle,
                 skipForwardState:true,
@@ -396,6 +521,7 @@ class App extends React.Component{
                 skipBackIcon:"control-button skip-back-icon",
                 readyToPlay:nextPlay,
                 currentIndex:nextIndex,
+                songDuration:nextTime,
               })
       })
       this.setState({
@@ -409,18 +535,75 @@ class App extends React.Component{
             skipBackIcon:"control-button skip-back-icon",
             readyToPlay:songPlay,
             currentIndex:nextIndex,
+            songDuration:nextDuration,
           })
     }
 
     if(this.state.skipForwardState===false && this.state.playState===true && this.state.skipBackState===false && this.state.pauseState===false && nextSongDefined===true)
     {
-
-      var playingSong = this.state.readyToPlay;
       playingSong.pause();
       var nextTitle = nextSong.title;
       var nextUrl = nextSong.mp3;
+      var nextDuration=nextSong.time;
       var songPlay = new Audio(nextUrl);
       songPlay.play();
+      songPlay.addEventListener('timeupdate',(event)=>{
+        var timeChange = songPlay.currentTime
+          var fixed = timeChange.toFixed(1)
+          if(timeChange > 1){
+            var renderTime ="0:00"
+            var cutTimeNum= timeChange.toFixed(1)
+            var splitNum = cutTimeNum.split('.');
+            var duration = Number(splitNum[0]);
+            if(duration<10){
+              renderTime= "0:0"+duration
+            }
+            if(duration >= 10 && duration < 60){
+              renderTime="0:"+duration
+            }
+            if(duration >=60){
+              if(duration===60){
+                renderTime="1:00"
+              }
+              else if((duration%60)===0)
+              {
+                  var min = (duration/60)
+                  if(min<10){
+                    renderTime= min+":00"
+                  }else{
+                    renderTime= min+":00"
+                  }
+              }
+              else{
+                var findMin = (duration/60)
+
+                if(findMin<10){
+                  var min= findMin.toString().split('.')[0]+":";
+                  var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  if(sec >= 10 && sec < 60){
+                  var strSec ="0"+sec;
+                  renderTime= min+sec;
+                  }
+                  if(sec<10){
+                    renderTime=min+"0"+sec;
+                  }
+
+                }
+
+              }
+
+            }
+          }
+          if(renderTime!=undefined){
+          this.setState({
+            currentSongTime:renderTime,
+          })
+
+        }
+
+      })
 
       songPlay.addEventListener('ended',(e)=>{
         var nextIndex = this.state.currentIndex + 1;
@@ -444,11 +627,69 @@ class App extends React.Component{
             readyToPlay:songToPlay,
           })
         }
-
+        playingSong.pause();
         var nextTitle = nextSong.title;
         var nextUrl = nextSong.mp3;
+        var nextTime = nextSong.time;
         var nextPlay = new Audio(nextUrl);
         nextPlay.play();
+        nextPlay.addEventListener('timeupdate',(event)=>{
+          var timeChange = nextPlay.currentTime
+            var fixed = timeChange.toFixed(1)
+            if(timeChange > 1){
+              var renderTime ="00:00"
+              var cutTimeNum= timeChange.toFixed(1)
+              var splitNum = cutTimeNum.split('.');
+              var duration = Number(splitNum[0]);
+              if(duration<10){
+                renderTime= "00:0"+duration
+              }
+              if(duration >= 10 && duration < 60){
+                renderTime="00:"+duration
+              }
+              if(duration >=60){
+                if(duration===60){
+                  renderTime="01:00"
+                }
+                else if((duration%60)===0)
+                {
+                    var min = (duration/60)
+                    if(min<10){
+                      renderTime= "0"+min+":00"
+                    }else{
+                      renderTime= min+":00"
+                    }
+                }
+                else{
+                  var findMin = (duration/60)
+
+                  if(findMin<10){
+                    var min= "0"+findMin.toString().split('.')[0]+":";
+                    var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    if(sec >= 10 && sec < 60){
+                    var strSec ="0"+sec;
+                    renderTime= min+sec;
+                    }
+                    if(sec<10){
+                      renderTime=min+"0"+sec;
+                    }
+
+                  }
+
+                }
+
+              }
+            }
+            if(renderTime!=undefined){
+            this.setState({
+              currentSongTime:renderTime,
+            })
+
+          }
+
+        })
         this.setState({
                 songTitle:nextTitle,
                 skipForwardState:true,
@@ -460,6 +701,7 @@ class App extends React.Component{
                 skipBackIcon:"control-button skip-back-icon",
                 readyToPlay:nextPlay,
                 currentIndex:nextIndex,
+                songDuration:nextTime,
               })
       })
 
@@ -475,17 +717,74 @@ class App extends React.Component{
             skipBackIcon:"control-button skip-back-icon",
             readyToPlay:songPlay,
             currentIndex:nextIndex,
+            songDuration:nextDuration,
           })
     }
 
     if(this.state.skipForwardState===true && this.state.playState===true && this.state.skipBackState===false && this.state.pauseState===false && nextSongDefined===true){
-      var playingSong = this.state.readyToPlay;
       playingSong.pause();
-
       var nextTitle = nextSong.title;
       var nextUrl = nextSong.mp3;
+      var nextDuration=nextSong.time;
       var songPlay = new Audio(nextUrl);
       songPlay.play();
+      songPlay.addEventListener('timeupdate',(event)=>{
+        var timeChange = songPlay.currentTime
+          var fixed = timeChange.toFixed(1)
+          if(timeChange > 1){
+            var renderTime ="0:00"
+            var cutTimeNum= timeChange.toFixed(1)
+            var splitNum = cutTimeNum.split('.');
+            var duration = Number(splitNum[0]);
+            if(duration<10){
+              renderTime= "0:0"+duration
+            }
+            if(duration >= 10 && duration < 60){
+              renderTime="0:"+duration
+            }
+            if(duration >=60){
+              if(duration===60){
+                renderTime="1:00"
+              }
+              else if((duration%60)===0)
+              {
+                  var min = (duration/60)
+                  if(min<10){
+                    renderTime= min+":00"
+                  }else{
+                    renderTime= min+":00"
+                  }
+              }
+              else{
+                var findMin = (duration/60)
+
+                if(findMin<10){
+                  var min= findMin.toString().split('.')[0]+":";
+                  var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  if(sec >= 10 && sec < 60){
+                  var strSec ="0"+sec;
+                  renderTime= min+sec;
+                  }
+                  if(sec<10){
+                    renderTime=min+"0"+sec;
+                  }
+
+                }
+
+              }
+
+            }
+          }
+          if(renderTime!=undefined){
+          this.setState({
+            currentSongTime:renderTime,
+          })
+
+        }
+
+      })
 
       songPlay.addEventListener('ended',(e)=>{
         var nextIndex = this.state.currentIndex + 1;
@@ -509,11 +808,70 @@ class App extends React.Component{
             readyToPlay:songToPlay,
           })
         }
-
+        playingSong.pause();
         var nextTitle = nextSong.title;
         var nextUrl = nextSong.mp3;
+        var nextTime= nextSong.time;
         var nextPlay = new Audio(nextUrl);
         nextPlay.play();
+        nextPlay.addEventListener('timeupdate',(event)=>{
+          var timeChange = nextPlay.currentTime
+            var fixed = timeChange.toFixed(1)
+            if(timeChange > 1){
+              var renderTime ="0:00"
+              var cutTimeNum= timeChange.toFixed(1)
+              var splitNum = cutTimeNum.split('.');
+              var duration = Number(splitNum[0]);
+              if(duration<10){
+                renderTime= "0:0"+duration
+              }
+              if(duration >= 10 && duration < 60){
+                renderTime="0:"+duration
+              }
+              if(duration >=60){
+                if(duration===60){
+                  renderTime="1:00"
+                }
+                else if((duration%60)===0)
+                {
+                    var min = (duration/60)
+                    if(min<10){
+                      renderTime= min+":00"
+                    }else{
+                      renderTime= min+":00"
+                    }
+                }
+                else{
+                  var findMin = (duration/60)
+
+                  if(findMin<10){
+                    var min= findMin.toString().split('.')[0]+":";
+                    var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    if(sec >= 10 && sec < 60){
+                    var strSec ="0"+sec;
+                    renderTime= min+sec;
+                    }
+                    if(sec<10){
+                      renderTime=min+"0"+sec;
+                    }
+
+                  }
+
+                }
+
+              }
+            }
+            if(renderTime!=undefined){
+            this.setState({
+              currentSongTime:renderTime,
+            })
+
+          }
+
+        })
+
         this.setState({
                 songTitle:nextTitle,
                 skipForwardState:false,
@@ -525,6 +883,7 @@ class App extends React.Component{
                 skipBackIcon:"control-button skip-back-icon",
                 readyToPlay:nextPlay,
                 currentIndex:nextIndex,
+                songDuration:nextTime,
               })
       })
       this.setState({
@@ -538,6 +897,7 @@ class App extends React.Component{
             skipBackIcon:"control-button skip-back-icon",
             readyToPlay:songPlay,
             currentIndex:nextIndex,
+            songDuration:nextDuration,
           })
 
     }
@@ -545,13 +905,69 @@ class App extends React.Component{
 
 
     if(this.state.skipForwardState===false && this.state.playState===true && this.state.skipBackState===true && this.state.pauseState===false && nextSongDefined===true){
-      var playingSong = this.state.readyToPlay;
       playingSong.pause();
-
       var nextTitle = nextSong.title;
       var nextUrl = nextSong.mp3;
+      var nextDuration=nextSong.time;
       var songPlay = new Audio(nextUrl);
       songPlay.play();
+      songPlay.addEventListener('timeupdate',(event)=>{
+        var timeChange = songPlay.currentTime
+          var fixed = timeChange.toFixed(1)
+          if(timeChange > 1){
+            var renderTime ="0:00"
+            var cutTimeNum= timeChange.toFixed(1)
+            var splitNum = cutTimeNum.split('.');
+            var duration = Number(splitNum[0]);
+            if(duration<10){
+              renderTime= "0:0"+duration
+            }
+            if(duration >= 10 && duration < 60){
+              renderTime="0:"+duration
+            }
+            if(duration >=60){
+              if(duration===60){
+                renderTime="1:00"
+              }
+              else if((duration%60)===0)
+              {
+                  var min = (duration/60)
+                  if(min<10){
+                    renderTime= min+":00"
+                  }else{
+                    renderTime= min+":00"
+                  }
+              }
+              else{
+                var findMin = (duration/60)
+
+                if(findMin<10){
+                  var min= findMin.toString().split('.')[0]+":";
+                  var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  if(sec >= 10 && sec < 60){
+                  var strSec ="0"+sec;
+                  renderTime= min+sec;
+                  }
+                  if(sec<10){
+                    renderTime=min+"0"+sec;
+                  }
+
+                }
+
+              }
+
+            }
+          }
+          if(renderTime!=undefined){
+          this.setState({
+            currentSongTime:renderTime,
+          })
+
+        }
+
+      })
 
       songPlay.addEventListener('ended',(e)=>{
         var nextIndex = this.state.currentIndex + 1;
@@ -575,11 +991,70 @@ class App extends React.Component{
             readyToPlay:songToPlay,
           })
         }
-
+        playingSong.pause();
         var nextTitle = nextSong.title;
         var nextUrl = nextSong.mp3;
+        var nextTime=nextSong.time;
         var nextPlay = new Audio(nextUrl);
         nextPlay.play();
+        songPlay.addEventListener('timeupdate',(event)=>{
+          var timeChange = songPlay.currentTime
+            var fixed = timeChange.toFixed(1)
+            if(timeChange > 1){
+              var renderTime ="0:00"
+              var cutTimeNum= timeChange.toFixed(1)
+              var splitNum = cutTimeNum.split('.');
+              var duration = Number(splitNum[0]);
+              if(duration<10){
+                renderTime= "0:0"+duration
+              }
+              if(duration >= 10 && duration < 60){
+                renderTime="0:"+duration
+              }
+              if(duration >=60){
+                if(duration===60){
+                  renderTime="1:00"
+                }
+                else if((duration%60)===0)
+                {
+                    var min = (duration/60)
+                    if(min<10){
+                      renderTime= min+":00"
+                    }else{
+                      renderTime= min+":00"
+                    }
+                }
+                else{
+                  var findMin = (duration/60)
+
+                  if(findMin<10){
+                    var min= findMin.toString().split('.')[0]+":";
+                    var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    if(sec >= 10 && sec < 60){
+                    var strSec ="0"+sec;
+                    renderTime= min+sec;
+                    }
+                    if(sec<10){
+                      renderTime=min+"0"+sec;
+                    }
+
+                  }
+
+                }
+
+              }
+            }
+            if(renderTime!=undefined){
+            this.setState({
+              currentSongTime:renderTime,
+            })
+
+          }
+
+        })
+
         this.setState({
                 songTitle:nextTitle,
                 skipForwardState:false,
@@ -591,6 +1066,7 @@ class App extends React.Component{
                 skipBackIcon:"control-button skip-back-icon",
                 readyToPlay:nextPlay,
                 currentIndex:nextIndex,
+                songDuration:nextTime,
               })
       })
 
@@ -605,6 +1081,7 @@ class App extends React.Component{
             skipBackIcon:"control-button skip-back-icon",
             readyToPlay:songPlay,
             currentIndex:nextIndex,
+            songDuration:nextDuration,
           })
 
     }
@@ -616,24 +1093,76 @@ class App extends React.Component{
   handlePlayClick(event){
     event.preventDefault();
 
-    //console.log(this.state.playState+" "+this.state.pauseState+' '+this.state.skipForwardState+' '+this.state.skipBackState)
+    // console.log(this.state.playState+" "+this.state.pauseState+' '+this.state.skipForwardState+' '+this.state.skipBackState)
     var songPlay = this.state.readyToPlay;
 
 
     if(this.state.playState === false && this.state.pauseState === true && this.state.skipForwardState===false && this.state.skipBackState===false && this.state.playListEnded===false){
 
       songPlay.play();
-      // songPlay.addEventListener('timeupdate',(e)=>{
-      //   console.log('time updated')
-      // })
+      songPlay.addEventListener('timeupdate',(event)=>{
+        var timeChange = songPlay.currentTime
+          var fixed = timeChange.toFixed(1)
+          if(timeChange > 1){
+            var renderTime ="0:00"
+            var cutTimeNum= timeChange.toFixed(1)
+            var splitNum = cutTimeNum.split('.');
+            var duration = Number(splitNum[0]);
+            if(duration<10){
+              renderTime= "0:0"+duration
+            }
+            if(duration >= 10 && duration < 60){
+              renderTime="0:"+duration
+            }
+            if(duration >=60){
+              if(duration===60){
+                renderTime="1:00"
+              }
+              else if((duration%60)===0)
+              {
+                  var min = (duration/60)
+                  if(min<10){
+                    renderTime= min+":00"
+                  }else{
+                    renderTime= min+":00"
+                  }
+              }
+              else{
+                var findMin = (duration/60)
+
+                if(findMin<10){
+                  var min= findMin.toString().split('.')[0]+":";
+                  var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  if(sec >= 10 && sec < 60){
+                  var strSec ="0"+sec;
+                  renderTime= min+sec;
+                  }
+                  if(sec<10){
+                    renderTime=min+"0"+sec;
+                  }
+
+                }
+
+              }
+
+            }
+          }
+          if(renderTime!=undefined){
+          this.setState({
+            currentSongTime:renderTime,
+          })
+
+        }
+
+      })
 
       songPlay.addEventListener('ended',(e)=>{
-        console.log('song ended')
         var nextIndex = this.state.currentIndex + 1;
         var nextSong = this.state.songs[nextIndex];
 
         if(nextSong===undefined && nextIndex === this.state.songs.length){
-          console.log('in undefined')
           var index = 0;
           var song = this.state.songs[index];
           var songUrl = song.mp3;
@@ -651,11 +1180,72 @@ class App extends React.Component{
             readyToPlay:songToPlay,
           })
         }
-
+        playingSong.pause();
         var nextTitle = nextSong.title;
         var nextUrl = nextSong.mp3;
+        var nextTime = nextSong.time;
+        var nextDuration= nextSong.duration
         var nextPlay = new Audio(nextUrl);
         nextPlay.play();
+        nextPlay.addEventListener('timeupdate',(event)=>{
+          var timeChange = nextPlay.currentTime
+            var fixed = timeChange.toFixed(1)
+            if(timeChange > 1){
+              var renderTime ="0:00"
+              var cutTimeNum= timeChange.toFixed(1)
+              var splitNum = cutTimeNum.split('.');
+              var duration = Number(splitNum[0]);
+              if(duration<10){
+                renderTime= "0:0"+duration
+              }
+              if(duration >= 10 && duration < 60){
+                renderTime="0:"+duration
+              }
+              if(duration >=60){
+                if(duration===60){
+                  renderTime="1:00"
+                }
+                else if((duration%60)===0)
+                {
+                    var min = (duration/60)
+                    if(min<10){
+                      renderTime= min+":00"
+                    }else{
+                      renderTime= min+":00"
+                    }
+                }
+                else{
+                  var findMin = (duration/60)
+
+                  if(findMin<10){
+                    var min= findMin.toString().split('.')[0]+":";
+                    var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    if(sec >= 10 && sec < 60){
+                    var strSec ="0"+sec;
+                    renderTime= min+sec;
+                    }
+                    if(sec<10){
+                      renderTime=min+"0"+sec;
+                    }
+
+                  }
+
+                }
+
+              }
+            }
+            if(renderTime!=undefined){
+            this.setState({
+              currentSongTime:renderTime,
+            })
+
+          }
+
+        })
+
+
         this.setState({
                 songTitle:nextTitle,
                 skipForwardState:false,
@@ -667,6 +1257,7 @@ class App extends React.Component{
                 skipBackIcon:"control-button skip-back-icon",
                 readyToPlay:nextPlay,
                 currentIndex:nextIndex,
+                songDuration:nextTime,
               })
       })
 
@@ -682,15 +1273,74 @@ class App extends React.Component{
     }
 
     if(this.state.playState === false && this.state.pauseState === true && this.state.skipForwardState===false && this.state.skipBackState===false&& this.state.playListEnded===true){
+      playingSong.pause();
       var song = this.state.songs[0];
       var songTitle = song.title;
+      var time= song.time;
       songPlay.play();
+      songPlay.addEventListener('timeupdate',(event)=>{
+        var timeChange = songPlay.currentTime
+          var fixed = timeChange.toFixed(1)
+          if(timeChange > 1){
+            var renderTime ="0:00"
+            var cutTimeNum= timeChange.toFixed(1)
+            var splitNum = cutTimeNum.split('.');
+            var duration = Number(splitNum[0]);
+            if(duration<10){
+              renderTime= "0:0"+duration
+            }
+            if(duration >= 10 && duration < 60){
+              renderTime="0:"+duration
+            }
+            if(duration >=60){
+              if(duration===60){
+                renderTime="1:00"
+              }
+              else if((duration%60)===0)
+              {
+                  var min = (duration/60)
+                  if(min<10){
+                    renderTime= min+":00"
+                  }else{
+                    renderTime= min+":00"
+                  }
+              }
+              else{
+                var findMin = (duration/60)
+
+                if(findMin<10){
+                  var min= findMin.toString().split('.')[0]+":";
+                  var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  if(sec >= 10 && sec < 60){
+                  var strSec ="0"+sec;
+                  renderTime= min+sec;
+                  }
+                  if(sec<10){
+                    renderTime=min+"0"+sec;
+                  }
+
+                }
+
+              }
+
+            }
+          }
+          if(renderTime!=undefined){
+          this.setState({
+            currentSongTime:renderTime,
+          })
+
+        }
+
+      })
 
 
       songPlay.addEventListener('ended',(e)=>{
-        console.log('song ended')
         var nextIndex = this.state.currentIndex + 1;
         var nextSong = this.state.songs[nextIndex];
+
 
         if(nextSong===undefined && nextIndex === this.state.songs.length){
           var index = 0;
@@ -710,11 +1360,70 @@ class App extends React.Component{
             readyToPlay:songToPlay,
           })
         }
-
+        playingSong.pause();
         var nextTitle = nextSong.title;
+        var nextTime = nextSong.time;
         var nextUrl = nextSong.mp3;
         var songPlay = new Audio(nextUrl);
         songPlay.play();
+        songPlay.addEventListener('timeupdate',(event)=>{
+          var timeChange = songPlay.currentTime
+            var fixed = timeChange.toFixed(1)
+            if(timeChange > 1){
+              var renderTime ="0:00"
+              var cutTimeNum= timeChange.toFixed(1)
+              var splitNum = cutTimeNum.split('.');
+              var duration = Number(splitNum[0]);
+              if(duration<10){
+                renderTime= "0:0"+duration
+              }
+              if(duration >= 10 && duration < 60){
+                renderTime="0:"+duration
+              }
+              if(duration >=60){
+                if(duration===60){
+                  renderTime="1:00"
+                }
+                else if((duration%60)===0)
+                {
+                    var min = (duration/60)
+                    if(min<10){
+                      renderTime= min+":00"
+                    }else{
+                      renderTime= min+":00"
+                    }
+                }
+                else{
+                  var findMin = (duration/60)
+
+                  if(findMin<10){
+                    var min= findMin.toString().split('.')[0]+":";
+                    var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    if(sec >= 10 && sec < 60){
+                    var strSec ="0"+sec;
+                    renderTime= min+sec;
+                    }
+                    if(sec<10){
+                      renderTime=min+"0"+sec;
+                    }
+
+                  }
+
+                }
+
+              }
+            }
+            if(renderTime!=undefined){
+            this.setState({
+              currentSongTime:renderTime,
+            })
+
+          }
+
+        })
+
         this.setState({
                 songTitle:nextTitle,
                 skipForwardState:false,
@@ -726,6 +1435,7 @@ class App extends React.Component{
                 skipBackIcon:"control-button skip-back-icon",
                 readyToPlay:songPlay,
                 currentIndex:nextIndex,
+                songDuration:nextTime,
               })
       })
 
@@ -739,6 +1449,7 @@ class App extends React.Component{
         skipForwardState:false,
         skipForwardIcon:"control-button skip-forward-icon",
         playListEnded:false,
+        songDuration:time,
       })
 
     }
@@ -786,9 +1497,14 @@ class App extends React.Component{
 
   handleSkipBackClick(event){
     event.preventDefault()
+
+    var playingSong = this.state.readyToPlay;
+
     var prevIndex = this.state.currentIndex - 1;
     var prevSong = this.state.songs[prevIndex];
+
     var prevSongDefined = true;
+    //console.log(this.state.playState+" "+this.state.pauseState+' '+this.state.skipForwardState+' '+this.state.skipBackState+prevSongDefined)
 
     if(prevSong===undefined && this.state.pauseState===true){
       prevSongDefined=false;
@@ -818,12 +1534,69 @@ class App extends React.Component{
     }
 
     if(this.state.skipForwardState===false && this.state.playState===false && this.state.skipBackState===false && this.state.pauseState===true && prevSongDefined===true){
-      var playingSong = this.state.readyToPlay;
       playingSong.pause();
       var prevTitle = prevSong.title;
+      var prevSongTime = prevSong.time;
       var prevUrl = prevSong.mp3;
       var songPlay = new Audio(prevUrl);
       songPlay.play();
+      songPlay.addEventListener('timeupdate',(event)=>{
+        var timeChange = songPlay.currentTime
+          var fixed = timeChange.toFixed(1)
+          if(timeChange > 1){
+            var renderTime ="0:00"
+            var cutTimeNum= timeChange.toFixed(1)
+            var splitNum = cutTimeNum.split('.');
+            var duration = Number(splitNum[0]);
+            if(duration<10){
+              renderTime= "0:0"+duration
+            }
+            if(duration >= 10 && duration < 60){
+              renderTime="0:"+duration
+            }
+            if(duration >=60){
+              if(duration===60){
+                renderTime="1:00"
+              }
+              else if((duration%60)===0)
+              {
+                  var min = (duration/60)
+                  if(min<10){
+                    renderTime= min+":00"
+                  }else{
+                    renderTime= min+":00"
+                  }
+              }
+              else{
+                var findMin = (duration/60)
+
+                if(findMin<10){
+                  var min= findMin.toString().split('.')[0]+":";
+                  var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  if(sec >= 10 && sec < 60){
+                  var strSec ="0"+sec;
+                  renderTime= min+sec;
+                  }
+                  if(sec<10){
+                    renderTime=min+"0"+sec;
+                  }
+
+                }
+
+              }
+
+            }
+          }
+          if(renderTime!=undefined){
+          this.setState({
+            currentSongTime:renderTime,
+          })
+
+        }
+
+      })
 
       songPlay.addEventListener('ended',(e)=>{
         var nextIndex = this.state.currentIndex + 1;
@@ -847,11 +1620,70 @@ class App extends React.Component{
             readyToPlay:songToPlay,
           })
         }
-
+        playingSong.pause();
         var nextTitle = nextSong.title;
         var nextUrl = nextSong.mp3;
+        var nextTime = nextSong.time
         var nextPlay = new Audio(nextUrl);
         nextPlay.play();
+        nextPlay.addEventListener('timeupdate',(event)=>{
+          var timeChange = nextPlay.currentTime
+            var fixed = timeChange.toFixed(1)
+            if(timeChange > 1){
+              var renderTime ="0:00"
+              var cutTimeNum= timeChange.toFixed(1)
+              var splitNum = cutTimeNum.split('.');
+              var duration = Number(splitNum[0]);
+              if(duration<10){
+                renderTime= "0:0"+duration
+              }
+              if(duration >= 10 && duration < 60){
+                renderTime="0:"+duration
+              }
+              if(duration >=60){
+                if(duration===60){
+                  renderTime="1:00"
+                }
+                else if((duration%60)===0)
+                {
+                    var min = (duration/60)
+                    if(min<10){
+                      renderTime= min+":00"
+                    }else{
+                      renderTime= min+":00"
+                    }
+                }
+                else{
+                  var findMin = (duration/60)
+
+                  if(findMin<10){
+                    var min= findMin.toString().split('.')[0]+":";
+                    var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    if(sec >= 10 && sec < 60){
+                    var strSec ="0"+sec;
+                    renderTime= min+sec;
+                    }
+                    if(sec<10){
+                      renderTime=min+"0"+sec;
+                    }
+
+                  }
+
+                }
+
+              }
+            }
+            if(renderTime!=undefined){
+            this.setState({
+              currentSongTime:renderTime,
+            })
+
+          }
+
+        })
+
         this.setState({
                 songTitle:nextTitle,
                 skipForwardState:false,
@@ -863,6 +1695,7 @@ class App extends React.Component{
                 skipBackIcon:"control-button skip-back-icon",
                 readyToPlay:nextPlay,
                 currentIndex:nextIndex,
+                songDuration:nextTime,
               })
       })
 
@@ -878,18 +1711,76 @@ class App extends React.Component{
             skipBackIcon:"control-button skip-back-icon",
             readyToPlay:songPlay,
             currentIndex:prevIndex,
+            songDuration:prevSongTime,
           })
     }
 
     if(this.state.skipForwardState===false && this.state.playState===true && this.state.skipBackState===false && this.state.pauseState===false && prevSongDefined===true)
     {
-
-      var playingSong = this.state.readyToPlay;
       playingSong.pause();
       var prevTitle = prevSong.title;
+      var prevSongTime = prevSong.time;
       var prevUrl = prevSong.mp3;
       var songPlay = new Audio(prevUrl);
       songPlay.play();
+      songPlay.addEventListener('timeupdate',(event)=>{
+        var timeChange = songPlay.currentTime
+          var fixed = timeChange.toFixed(1)
+          if(timeChange > 1){
+            var renderTime ="0:00"
+            var cutTimeNum= timeChange.toFixed(1)
+            var splitNum = cutTimeNum.split('.');
+            var duration = Number(splitNum[0]);
+            if(duration<10){
+              renderTime= "0:0"+duration
+            }
+            if(duration >= 10 && duration < 60){
+              renderTime="0:"+duration
+            }
+            if(duration >=60){
+              if(duration===60){
+                renderTime="1:00"
+              }
+              else if((duration%60)===0)
+              {
+                  var min = (duration/60)
+                  if(min<10){
+                    renderTime= min+":00"
+                  }else{
+                    renderTime= min+":00"
+                  }
+              }
+              else{
+                var findMin = (duration/60)
+
+                if(findMin<10){
+                  var min= findMin.toString().split('.')[0]+":";
+                  var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  if(sec >= 10 && sec < 60){
+                  var strSec ="0"+sec;
+                  renderTime= min+sec;
+                  }
+                  if(sec<10){
+                    renderTime=min+"0"+sec;
+                  }
+
+                }
+
+              }
+
+            }
+          }
+          if(renderTime!=undefined){
+          this.setState({
+            currentSongTime:renderTime,
+          })
+
+        }
+
+      })
+
 
       songPlay.addEventListener('ended',(e)=>{
         var nextIndex = this.state.currentIndex + 1;
@@ -913,11 +1804,70 @@ class App extends React.Component{
             readyToPlay:songToPlay,
           })
         }
-
+        playingSong.pause();
         var nextTitle = nextSong.title;
         var nextUrl = nextSong.mp3;
+        var nextTime = nextSong.time;
         var nextPlay = new Audio(nextUrl);
         nextPlay.play();
+        nextPlay.addEventListener('timeupdate',(event)=>{
+          var timeChange = nextPlay.currentTime
+            var fixed = timeChange.toFixed(1)
+            if(timeChange > 1){
+              var renderTime ="0:00"
+              var cutTimeNum= timeChange.toFixed(1)
+              var splitNum = cutTimeNum.split('.');
+              var duration = Number(splitNum[0]);
+              if(duration<10){
+                renderTime= "0:0"+duration
+              }
+              if(duration >= 10 && duration < 60){
+                renderTime="0:"+duration
+              }
+              if(duration >=60){
+                if(duration===60){
+                  renderTime="1:00"
+                }
+                else if((duration%60)===0)
+                {
+                    var min = (duration/60)
+                    if(min<10){
+                      renderTime= min+":00"
+                    }else{
+                      renderTime= min+":00"
+                    }
+                }
+                else{
+                  var findMin = (duration/60)
+
+                  if(findMin<10){
+                    var min= findMin.toString().split('.')[0]+":";
+                    var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    if(sec >= 10 && sec < 60){
+                    var strSec ="0"+sec;
+                    renderTime= min+sec;
+                    }
+                    if(sec<10){
+                      renderTime=min+"0"+sec;
+                    }
+
+                  }
+
+                }
+
+              }
+            }
+            if(renderTime!=undefined){
+            this.setState({
+              currentSongTime:renderTime,
+            })
+
+          }
+
+        })
+
         this.setState({
                 songTitle:nextTitle,
                 skipForwardState:false,
@@ -929,6 +1879,7 @@ class App extends React.Component{
                 skipBackIcon:"control-button skip-back-icon",
                 readyToPlay:nextPlay,
                 currentIndex:nextIndex,
+                songDuration:nextTime,
               })
       })
 
@@ -944,16 +1895,74 @@ class App extends React.Component{
             skipBackIcon:"control-button skip-back-icon",
             readyToPlay:songPlay,
             currentIndex:prevIndex,
+            songDuration:prevSongTime,
           })
     }
 
     if(this.state.skipForwardState===false && this.state.playState===true && this.state.skipBackState===true && this.state.pauseState===false && prevSongDefined===true){
-      var playingSong = this.state.readyToPlay;
       playingSong.pause();
       var prevTitle = prevSong.title;
+      var prevSongTime = prevSong.time;
       var prevUrl = prevSong.mp3;
       var songPlay = new Audio(prevUrl);
       songPlay.play();
+      songPlay.addEventListener('timeupdate',(event)=>{
+        var timeChange = songPlay.currentTime
+          var fixed = timeChange.toFixed(1)
+          if(timeChange > 1){
+            var renderTime ="0:00"
+            var cutTimeNum= timeChange.toFixed(1)
+            var splitNum = cutTimeNum.split('.');
+            var duration = Number(splitNum[0]);
+            if(duration<10){
+              renderTime= "0:0"+duration
+            }
+            if(duration >= 10 && duration < 60){
+              renderTime="0:"+duration
+            }
+            if(duration >=60){
+              if(duration===60){
+                renderTime="1:00"
+              }
+              else if((duration%60)===0)
+              {
+                  var min = (duration/60)
+                  if(min<10){
+                    renderTime= min+":00"
+                  }else{
+                    renderTime= min+":00"
+                  }
+              }
+              else{
+                var findMin = (duration/60)
+
+                if(findMin<10){
+                  var min= findMin.toString().split('.')[0]+":";
+                  var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  if(sec >= 10 && sec < 60){
+                  var strSec ="0"+sec;
+                  renderTime= min+sec;
+                  }
+                  if(sec<10){
+                    renderTime=min+"0"+sec;
+                  }
+
+                }
+
+              }
+
+            }
+          }
+          if(renderTime!=undefined){
+          this.setState({
+            currentSongTime:renderTime,
+          })
+
+        }
+
+      })
 
       songPlay.addEventListener('ended',(e)=>{
         var nextIndex = this.state.currentIndex + 1;
@@ -977,11 +1986,70 @@ class App extends React.Component{
             readyToPlay:songToPlay,
           })
         }
-
+        playingSong.pause();
         var nextTitle = nextSong.title;
         var nextUrl = nextSong.mp3;
+        var nextTime = nextSong.time;
         var nextPlay = new Audio(nextUrl);
         nextPlay.play();
+        nextPlay.addEventListener('timeupdate',(event)=>{
+          var timeChange = nextPlay.currentTime
+            var fixed = timeChange.toFixed(1)
+            if(timeChange > 1){
+              var renderTime ="0:00"
+              var cutTimeNum= timeChange.toFixed(1)
+              var splitNum = cutTimeNum.split('.');
+              var duration = Number(splitNum[0]);
+              if(duration<10){
+                renderTime= "0:0"+duration
+              }
+              if(duration >= 10 && duration < 60){
+                renderTime="0:"+duration
+              }
+              if(duration >=60){
+                if(duration===60){
+                  renderTime="1:00"
+                }
+                else if((duration%60)===0)
+                {
+                    var min = (duration/60)
+                    if(min<10){
+                      renderTime= min+":00"
+                    }else{
+                      renderTime= min+":00"
+                    }
+                }
+                else{
+                  var findMin = (duration/60)
+
+                  if(findMin<10){
+                    var min= findMin.toString().split('.')[0]+":";
+                    var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    if(sec >= 10 && sec < 60){
+                    var strSec ="0"+sec;
+                    renderTime= min+sec;
+                    }
+                    if(sec<10){
+                      renderTime=min+"0"+sec;
+                    }
+
+                  }
+
+                }
+
+              }
+            }
+            if(renderTime!=undefined){
+            this.setState({
+              currentSongTime:renderTime,
+            })
+
+          }
+
+        })
+
         this.setState({
                 songTitle:nextTitle,
                 skipForwardState:false,
@@ -993,6 +2061,7 @@ class App extends React.Component{
                 skipBackIcon:"control-button skip-back-icon",
                 readyToPlay:nextPlay,
                 currentIndex:nextIndex,
+                songDuration:nextTime,
               })
       })
 
@@ -1007,18 +2076,77 @@ class App extends React.Component{
             skipBackIcon:"control-button skip-back-icon",
             readyToPlay:songPlay,
             currentIndex:prevIndex,
+            songDuration:prevSongTime,
           })
 
     }
 
 
     if(this.state.skipForwardState===true && this.state.playState===true && this.state.skipBackState===false && this.state.pauseState===false && prevSongDefined===true){
-      var playingSong = this.state.readyToPlay;
       playingSong.pause();
       var prevTitle = prevSong.title;
+      var prevSongTime = prevSong.time;
       var prevUrl = prevSong.mp3;
       var songPlay = new Audio(prevUrl);
       songPlay.play();
+      songPlay.addEventListener('timeupdate',(event)=>{
+        var timeChange = songPlay.currentTime
+          var fixed = timeChange.toFixed(1)
+          if(timeChange > 1){
+            var renderTime ="0:00"
+            var cutTimeNum= timeChange.toFixed(1)
+            var splitNum = cutTimeNum.split('.');
+            var duration = Number(splitNum[0]);
+            if(duration<10){
+              renderTime= "0:0"+duration
+            }
+            if(duration >= 10 && duration < 60){
+              renderTime="0:"+duration
+            }
+            if(duration >=60){
+              if(duration===60){
+                renderTime="1:00"
+              }
+              else if((duration%60)===0)
+              {
+                  var min = (duration/60)
+                  if(min<10){
+                    renderTime= min+":00"
+                  }else{
+                    renderTime= min+":00"
+                  }
+              }
+              else{
+                var findMin = (duration/60)
+
+                if(findMin<10){
+                  var min= findMin.toString().split('.')[0]+":";
+                  var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  if(sec >= 10 && sec < 60){
+                  var strSec ="0"+sec;
+                  renderTime= min+sec;
+                  }
+                  if(sec<10){
+                    renderTime=min+"0"+sec;
+                  }
+
+                }
+
+              }
+
+            }
+          }
+          if(renderTime!=undefined){
+          this.setState({
+            currentSongTime:renderTime,
+          })
+
+        }
+
+      })
+
       songPlay.addEventListener('ended',(e)=>{
         var nextIndex = this.state.currentIndex + 1;
         var nextSong = this.state.songs[nextIndex];
@@ -1041,11 +2169,70 @@ class App extends React.Component{
             readyToPlay:songToPlay,
           })
         }
-
+        playingSong.pause();
         var nextTitle = nextSong.title;
         var nextUrl = nextSong.mp3;
+        var nextTime = nextSong.time;
         var nextPlay = new Audio(nextUrl);
         nextPlay.play();
+        nextPlay.addEventListener('timeupdate',(event)=>{
+          var timeChange = nextPlay.currentTime
+            var fixed = timeChange.toFixed(1)
+            if(timeChange > 1){
+              var renderTime ="0:00"
+              var cutTimeNum= timeChange.toFixed(1)
+              var splitNum = cutTimeNum.split('.');
+              var duration = Number(splitNum[0]);
+              if(duration<10){
+                renderTime= "0:0"+duration
+              }
+              if(duration >= 10 && duration < 60){
+                renderTime="0:"+duration
+              }
+              if(duration >=60){
+                if(duration===60){
+                  renderTime="1:00"
+                }
+                else if((duration%60)===0)
+                {
+                    var min = (duration/60)
+                    if(min<10){
+                      renderTime= min+":00"
+                    }else{
+                      renderTime= min+":00"
+                    }
+                }
+                else{
+                  var findMin = (duration/60)
+
+                  if(findMin<10){
+                    var min= findMin.toString().split('.')[0]+":";
+                    var secSplit = Number('0.'+findMin.toString().split('.')[1])
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    if(sec >= 10 && sec < 60){
+                    var strSec ="0"+sec;
+                    renderTime= min+sec;
+                    }
+                    if(sec<10){
+                      renderTime=min+"0"+sec;
+                    }
+
+                  }
+
+                }
+
+              }
+            }
+            if(renderTime!=undefined){
+            this.setState({
+              currentSongTime:renderTime,
+            })
+
+          }
+
+        })
+
         this.setState({
                 songTitle:nextTitle,
                 skipForwardState:false,
@@ -1057,6 +2244,7 @@ class App extends React.Component{
                 skipBackIcon:"control-button skip-back-icon",
                 readyToPlay:nextPlay,
                 currentIndex:nextIndex,
+                songDuration:nextTime,
               })
       })
       this.setState({
@@ -1070,6 +2258,7 @@ class App extends React.Component{
             skipBackIcon:"control-button skip-back-icon",
             readyToPlay:songPlay,
             currentIndex:prevIndex,
+            songDuration:prevSongTime,
           })
 
     }
@@ -1081,6 +2270,7 @@ class App extends React.Component{
     event.preventDefault();
 
     if(this.state.shuffleState === false){
+
       this.setState({
         shuffleState:true,
         shuffleWrapper: "control-button-wrapper control-button--active-dot",

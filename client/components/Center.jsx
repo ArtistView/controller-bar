@@ -23,7 +23,7 @@ const Center= function({currentState,handleShuffleClick,handleSkipBackClick,hand
           </div>
         </div>
         <div className = "play-bar">
-          <div className="time-progress left-time">1:58</div>
+          <div className="time-progress left-time">{currentState.currentSongTime}</div>
           <div className="progress-bar">
             <div className="middle-align progress-bar__bg">
               <div className="progress-bar-wrapper">
@@ -32,10 +32,10 @@ const Center= function({currentState,handleShuffleClick,handleSkipBackClick,hand
               <button className="middle-align progress-bar-slide" style={{left:'65.5365%'}}></button>
             </div>
           </div>
-          <div className="time-progress right-time">3:25</div>
+          <div className="time-progress right-time">{currentState.songDuration}</div>
         </div>
       </div>
-    </div> 
+    </div>
   )
 }
 
