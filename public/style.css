@@ -43,6 +43,8 @@ h3{
 .root-bar{
   grid-area: controller-components;
   width: 100%;
+  margin-left: -8.5px;
+  margin-right: 5px;
   background-color: #181818;
   z-index: 4;
 }
@@ -429,7 +431,7 @@ a {
 .progress-bar{
   height: 12px;
   position: relative;
-  width: 1000%;
+  width: 100%;
 }
 .middle-align{
   position: absolute;
@@ -437,6 +439,7 @@ a {
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
 }
+/*
 .progress-bar__bg{
   background-color: #535353;
   border-radius: 2px;
@@ -473,7 +476,7 @@ a {
   opacity: 0;
 }
 
-
+*/
 .right-time{
   font-size: 11px;
   font-weight: 400;
@@ -668,12 +671,39 @@ a {
 .input-bar::-webkit-slider-thumb{
   -webkit-appearance: none;
   appearance: none;
-  width:10px;
-  height: 10px;
+  width:12px;
+  height: 12px;
   background:transparent;
   border-radius: 50%;
 }
 
 .input-bar::-webkit-slider-thumb:hover{
+  background: white;
+}
+.progress-bar-wrapper{
+  width: 80%;
+}
+.music-bar{
+  -webkit-appearance: none;
+  width: 124%;
+  height:4px;
+  margin-top: 4px;
+  display: flex;
+  background:linear-gradient(90deg, #b3b3b3 60%,#b3b3b3 60%);
+  outline: none;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+  border-radius: 12px;
+}
+.music-bar::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  appearance: none;
+  width:12px;
+  height: 12px;
+  background:transparent;
+  border-radius: 50%;
+}
+
+.music-bar::-webkit-slider-thumb:hover{
   background: white;
 }
