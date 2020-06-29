@@ -47,7 +47,10 @@ class App extends React.Component{
       saveColor:"linear-gradient(90deg, #1db954 0%, #b3b3b3 0%)",
       playListEnded:false,
       songDuration:'0:00',
+      songSecDuration:0,
       currentSongTime: '0:00',
+      currentSongProgress:0,
+      musicBarProgress:"linear-gradient(90deg, #1db954 0%, #b3b3b3 0%)",
     }
 
 
@@ -73,6 +76,7 @@ class App extends React.Component{
                 songTitle: arr[0].title,
                 readyToPlay: new Audio(arr[0].mp3),
                 songDuration: arr[0].time,
+                songSecDuration: arr[0].duration,
               })
 
             })
@@ -82,6 +86,24 @@ class App extends React.Component{
 
   }
 
+  songRange(event){
+    var songPlay = this.state.readyToPlay;
+    var value = event.target.value;
+
+    var duration = Math.round(songPlay.duration);
+
+    var proportion = duration/100;
+
+    var newTime = value*proportion;
+
+
+    songPlay.currentTime= newTime;
+
+
+    this.setState({
+      currentSongProgress:value,
+    })
+  }
   volumeRange(event){
     //console.log(this.state.playState+" "+this.state.pauseState+' '+this.state.skipForwardState+' '+this.state.skipBackState)
 
@@ -398,7 +420,12 @@ class App extends React.Component{
                 if(findMin<10){
                   var min= findMin.toString().split('.')[0]+":";
                   var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                  if(secSplit.toString().length > 3){
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  }else{
+                    var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                  }
 
                   if(sec >= 10 && sec < 60){
                   var strSec ="0"+sec;
@@ -415,10 +442,13 @@ class App extends React.Component{
             }
           }
           if(renderTime!=undefined){
-          this.setState({
-            currentSongTime:renderTime,
-          })
-
+            var fill =  (songPlay.currentTime/songPlay.duration)*100;
+            var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+            this.setState({
+              currentSongTime:renderTime,
+              currentSongProgress:fill,
+              musicBarProgress:color,
+             })
         }
 
       })
@@ -485,7 +515,12 @@ class App extends React.Component{
                   if(findMin<10){
                     var min= findMin.toString().split('.')[0]+":";
                     var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                    if(secSplit.toString().length > 3){
+                      var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    }else{
+                      var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                    }
 
                     if(sec >= 10 && sec < 60){
                     var strSec ="0"+sec;
@@ -502,10 +537,13 @@ class App extends React.Component{
               }
             }
             if(renderTime!=undefined){
-            this.setState({
-              currentSongTime:renderTime,
-            })
-
+              var fill =  (nextPlay.currentTime/nextPlay.duration)*100;
+              var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+              this.setState({
+                currentSongTime:renderTime,
+                currentSongProgress:fill,
+                musicBarProgress:color,
+               })
           }
 
         })
@@ -580,7 +618,12 @@ class App extends React.Component{
                 if(findMin<10){
                   var min= findMin.toString().split('.')[0]+":";
                   var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                  if(secSplit.toString().length > 3){
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  }else{
+                    var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                  }
 
                   if(sec >= 10 && sec < 60){
                   var strSec ="0"+sec;
@@ -597,10 +640,13 @@ class App extends React.Component{
             }
           }
           if(renderTime!=undefined){
-          this.setState({
-            currentSongTime:renderTime,
-          })
-
+            var fill =  (songPlay.currentTime/songPlay.duration)*100;
+            var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+            this.setState({
+              currentSongTime:renderTime,
+              currentSongProgress:fill,
+              musicBarProgress:color,
+             })
         }
 
       })
@@ -637,25 +683,25 @@ class App extends React.Component{
           var timeChange = nextPlay.currentTime
             var fixed = timeChange.toFixed(1)
             if(timeChange > 1){
-              var renderTime ="00:00"
+              var renderTime ="0:00"
               var cutTimeNum= timeChange.toFixed(1)
               var splitNum = cutTimeNum.split('.');
               var duration = Number(splitNum[0]);
               if(duration<10){
-                renderTime= "00:0"+duration
+                renderTime= "0:0"+duration
               }
               if(duration >= 10 && duration < 60){
-                renderTime="00:"+duration
+                renderTime="0:"+duration
               }
               if(duration >=60){
                 if(duration===60){
-                  renderTime="01:00"
+                  renderTime="1:00"
                 }
                 else if((duration%60)===0)
                 {
                     var min = (duration/60)
                     if(min<10){
-                      renderTime= "0"+min+":00"
+                      renderTime= min+":00"
                     }else{
                       renderTime= min+":00"
                     }
@@ -664,9 +710,14 @@ class App extends React.Component{
                   var findMin = (duration/60)
 
                   if(findMin<10){
-                    var min= "0"+findMin.toString().split('.')[0]+":";
+                    var min= findMin.toString().split('.')[0]+":";
                     var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                    if(secSplit.toString().length > 3){
+                      var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    }else{
+                      var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                    }
 
                     if(sec >= 10 && sec < 60){
                     var strSec ="0"+sec;
@@ -683,10 +734,13 @@ class App extends React.Component{
               }
             }
             if(renderTime!=undefined){
-            this.setState({
-              currentSongTime:renderTime,
-            })
-
+              var fill =  (nextPlay.currentTime/nextPlay.duration)*100;
+              var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+              this.setState({
+                currentSongTime:renderTime,
+                currentSongProgress:fill,
+                musicBarProgress:color,
+               })
           }
 
         })
@@ -761,7 +815,12 @@ class App extends React.Component{
                 if(findMin<10){
                   var min= findMin.toString().split('.')[0]+":";
                   var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                  if(secSplit.toString().length > 3){
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  }else{
+                    var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                  }
 
                   if(sec >= 10 && sec < 60){
                   var strSec ="0"+sec;
@@ -778,10 +837,13 @@ class App extends React.Component{
             }
           }
           if(renderTime!=undefined){
-          this.setState({
-            currentSongTime:renderTime,
-          })
-
+            var fill =  (songPlay.currentTime/songPlay.duration)*100;
+            var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+            this.setState({
+              currentSongTime:renderTime,
+              currentSongProgress:fill,
+              musicBarProgress:color,
+             })
         }
 
       })
@@ -847,7 +909,12 @@ class App extends React.Component{
                   if(findMin<10){
                     var min= findMin.toString().split('.')[0]+":";
                     var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                    if(secSplit.toString().length > 3){
+                      var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    }else{
+                      var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                    }
 
                     if(sec >= 10 && sec < 60){
                     var strSec ="0"+sec;
@@ -864,10 +931,13 @@ class App extends React.Component{
               }
             }
             if(renderTime!=undefined){
-            this.setState({
-              currentSongTime:renderTime,
-            })
-
+              var fill =  (nextPlay.currentTime/nextPlay.duration)*100;
+              var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+              this.setState({
+                currentSongTime:renderTime,
+                currentSongProgress:fill,
+                musicBarProgress:color,
+               })
           }
 
         })
@@ -944,7 +1014,12 @@ class App extends React.Component{
                 if(findMin<10){
                   var min= findMin.toString().split('.')[0]+":";
                   var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                  if(secSplit.toString().length > 3){
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  }else{
+                    var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                  }
 
                   if(sec >= 10 && sec < 60){
                   var strSec ="0"+sec;
@@ -961,10 +1036,13 @@ class App extends React.Component{
             }
           }
           if(renderTime!=undefined){
-          this.setState({
-            currentSongTime:renderTime,
-          })
-
+            var fill =  (songPlay.currentTime/songPlay.duration)*100;
+            var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+            this.setState({
+              currentSongTime:renderTime,
+              currentSongProgress:fill,
+              musicBarProgress:color,
+             })
         }
 
       })
@@ -997,8 +1075,8 @@ class App extends React.Component{
         var nextTime=nextSong.time;
         var nextPlay = new Audio(nextUrl);
         nextPlay.play();
-        songPlay.addEventListener('timeupdate',(event)=>{
-          var timeChange = songPlay.currentTime
+        nextPlay.addEventListener('timeupdate',(event)=>{
+          var timeChange = nextPlay.currentTime
             var fixed = timeChange.toFixed(1)
             if(timeChange > 1){
               var renderTime ="0:00"
@@ -1030,7 +1108,12 @@ class App extends React.Component{
                   if(findMin<10){
                     var min= findMin.toString().split('.')[0]+":";
                     var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                    if(secSplit.toString().length > 3){
+                      var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    }else{
+                      var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                    }
 
                     if(sec >= 10 && sec < 60){
                     var strSec ="0"+sec;
@@ -1047,10 +1130,13 @@ class App extends React.Component{
               }
             }
             if(renderTime!=undefined){
-            this.setState({
-              currentSongTime:renderTime,
-            })
-
+              var fill =  (nextPlay.currentTime/nextPlay.duration)*100;
+              var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+              this.setState({
+                currentSongTime:renderTime,
+                currentSongProgress:fill,
+                musicBarProgress:color,
+               })
           }
 
         })
@@ -1096,9 +1182,108 @@ class App extends React.Component{
     // console.log(this.state.playState+" "+this.state.pauseState+' '+this.state.skipForwardState+' '+this.state.skipBackState)
     var songPlay = this.state.readyToPlay;
 
+    // var playSong= function(song){
+    //   var songTitle = song.title;
+    //   var songUrl = song.mp3;
+    //   var songTime = song.time;
+    //   var songDuration= song.duration
+    //   var songPlay = new Audio(songUrl);
+    //   songPlay.play();
+    //   songPlay.addEventListener('timeupdate',(event)=>{
+    //     var timeChange = songPlay.currentTime
+    //       var fixed = timeChange.toFixed(1)
+    //       if(timeChange > 1){
+    //         var renderTime ="0:00"
+    //         var cutTimeNum= timeChange.toFixed(1)
+    //         var splitNum = cutTimeNum.split('.');
+    //         var duration = Number(splitNum[0]);
+    //         if(duration<10){
+    //           renderTime= "0:0"+duration
+    //         }
+    //         if(duration >= 10 && duration < 60){
+    //           renderTime="0:"+duration
+    //         }
+    //         if(duration >=60){
+    //           if(duration===60){
+    //             renderTime="1:00"
+    //           }
+    //           else if((duration%60)===0)
+    //           {
+    //               var min = (duration/60)
+    //               if(min<10){
+    //                 renderTime= min+":00"
+    //               }else{
+    //                 renderTime= min+":00"
+    //               }
+    //           }
+    //           else{
+    //             var findMin = (duration/60)
+
+    //             if(findMin<10){
+    //               var min= findMin.toString().split('.')[0]+":";
+    //               var secSplit = Number('0.'+findMin.toString().split('.')[1])
+    //               if(secSplit.toString().length > 3){
+    //                 var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+    //               }else{
+    //                 var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+    //               }
+
+    //               if(sec >= 10 && sec < 60){
+    //               var strSec ="0"+sec;
+    //               renderTime= min+sec;
+    //               }
+    //               if(sec<10){
+    //                 renderTime=min+"0"+sec;
+    //               }
+
+    //             }
+
+    //           }
+
+    //         }
+    //       }
+    //       if(renderTime!=undefined){
+    //         var fill =  (songPlay.currentTime/this.state.songSecDuration)*100;
+    //         var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+    //         this.setState({
+    //           currentSongTime:renderTime,
+    //           currentSongProgress:fill,
+    //           musicBarProgress:color,
+    //          })
+    //     }
+
+    //   })
+
+    //   this.setState({
+    //     playState:true,
+    //     playIcon:"control-button pause-icon play-button-circle-active",
+    //     pauseState: false,
+    //     skipBackState:false,
+    //     skipBackIcon:"control-button skip-back-icon",
+    //     skipForwardState:false,
+    //     skipForwardIcon:"control-button skip-forward-icon",
+    //    })
+
+    //   songPlay.addEventListener('ended',(e)=>{
+    //     // var songArr = this.state.songs;
+    //     // for(var i = 0;i<songArr.length;i++){
+    //     //   playSong(songArr[i])
+    //     // }
+    //     var nextIndex = this.state.currentIndex+1;
+    //     var nextSong = this.state.song[nextIndex];
+    //     this.setState({
+    //       currentIndex:nextIndex,
+
+    //     })
+    //   })
+
+
+    // }
+   
 
     if(this.state.playState === false && this.state.pauseState === true && this.state.skipForwardState===false && this.state.skipBackState===false && this.state.playListEnded===false){
-
+        //playSong(this.state.songs[this.state.currentIndex]);
       songPlay.play();
       songPlay.addEventListener('timeupdate',(event)=>{
         var timeChange = songPlay.currentTime
@@ -1133,7 +1318,12 @@ class App extends React.Component{
                 if(findMin<10){
                   var min= findMin.toString().split('.')[0]+":";
                   var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                  if(secSplit.toString().length > 3){
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  }else{
+                    var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                  }
 
                   if(sec >= 10 && sec < 60){
                   var strSec ="0"+sec;
@@ -1150,10 +1340,13 @@ class App extends React.Component{
             }
           }
           if(renderTime!=undefined){
-          this.setState({
-            currentSongTime:renderTime,
-          })
-
+            var fill =  (songPlay.currentTime/songPlay.duration)*100;
+            var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+            this.setState({
+              currentSongTime:renderTime,
+              currentSongProgress:fill,
+              musicBarProgress:color,
+             })
         }
 
       })
@@ -1180,7 +1373,7 @@ class App extends React.Component{
             readyToPlay:songToPlay,
           })
         }
-        playingSong.pause();
+
         var nextTitle = nextSong.title;
         var nextUrl = nextSong.mp3;
         var nextTime = nextSong.time;
@@ -1220,7 +1413,12 @@ class App extends React.Component{
                   if(findMin<10){
                     var min= findMin.toString().split('.')[0]+":";
                     var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                    if(secSplit.toString().length > 3){
+                      var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    }else{
+                      var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                    }
 
                     if(sec >= 10 && sec < 60){
                     var strSec ="0"+sec;
@@ -1237,10 +1435,13 @@ class App extends React.Component{
               }
             }
             if(renderTime!=undefined){
-            this.setState({
-              currentSongTime:renderTime,
-            })
-
+              var fill =  (nextPlay.currentTime/nextPlay.duration)*100;
+              var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+              this.setState({
+                currentSongTime:renderTime,
+                currentSongProgress:fill,
+                musicBarProgress:color,
+               })
           }
 
         })
@@ -1269,7 +1470,8 @@ class App extends React.Component{
         skipBackIcon:"control-button skip-back-icon",
         skipForwardState:false,
         skipForwardIcon:"control-button skip-forward-icon",
-      })
+       })
+
     }
 
     if(this.state.playState === false && this.state.pauseState === true && this.state.skipForwardState===false && this.state.skipBackState===false&& this.state.playListEnded===true){
@@ -1311,7 +1513,12 @@ class App extends React.Component{
                 if(findMin<10){
                   var min= findMin.toString().split('.')[0]+":";
                   var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                  if(secSplit.toString().length > 3){
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  }else{
+                    var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                  }
 
                   if(sec >= 10 && sec < 60){
                   var strSec ="0"+sec;
@@ -1328,10 +1535,13 @@ class App extends React.Component{
             }
           }
           if(renderTime!=undefined){
-          this.setState({
-            currentSongTime:renderTime,
-          })
-
+            var fill =  (songPlay.currentTime/songPlay.duration)*100;
+            var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+            this.setState({
+              currentSongTime:renderTime,
+              currentSongProgress:fill,
+              musicBarProgress:color,
+             })
         }
 
       })
@@ -1399,7 +1609,12 @@ class App extends React.Component{
                   if(findMin<10){
                     var min= findMin.toString().split('.')[0]+":";
                     var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                    if(secSplit.toString().length > 3){
+                      var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    }else{
+                      var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                    }
 
                     if(sec >= 10 && sec < 60){
                     var strSec ="0"+sec;
@@ -1416,10 +1631,13 @@ class App extends React.Component{
               }
             }
             if(renderTime!=undefined){
-            this.setState({
-              currentSongTime:renderTime,
-            })
-
+              var fill =  (songPlay.currentTime/songPlay.duration)*100;
+              var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+              this.setState({
+                currentSongTime:renderTime,
+                currentSongProgress:fill,
+                musicBarProgress:color,
+               })
           }
 
         })
@@ -1573,7 +1791,12 @@ class App extends React.Component{
                 if(findMin<10){
                   var min= findMin.toString().split('.')[0]+":";
                   var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                  if(secSplit.toString().length > 3){
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  }else{
+                    var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                  }
 
                   if(sec >= 10 && sec < 60){
                   var strSec ="0"+sec;
@@ -1590,10 +1813,13 @@ class App extends React.Component{
             }
           }
           if(renderTime!=undefined){
-          this.setState({
-            currentSongTime:renderTime,
-          })
-
+            var fill =  (songPlay.currentTime/songPlay.duration)*100;
+            var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+            this.setState({
+              currentSongTime:renderTime,
+              currentSongProgress:fill,
+              musicBarProgress:color,
+             })
         }
 
       })
@@ -1659,7 +1885,12 @@ class App extends React.Component{
                   if(findMin<10){
                     var min= findMin.toString().split('.')[0]+":";
                     var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                    if(secSplit.toString().length > 3){
+                      var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    }else{
+                      var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                    }
 
                     if(sec >= 10 && sec < 60){
                     var strSec ="0"+sec;
@@ -1676,10 +1907,13 @@ class App extends React.Component{
               }
             }
             if(renderTime!=undefined){
-            this.setState({
-              currentSongTime:renderTime,
-            })
-
+              var fill =  (nextPlay.currentTime/nextPlay.duration)*100;
+              var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+              this.setState({
+                currentSongTime:renderTime,
+                currentSongProgress:fill,
+                musicBarProgress:color,
+               })
           }
 
         })
@@ -1756,7 +1990,12 @@ class App extends React.Component{
                 if(findMin<10){
                   var min= findMin.toString().split('.')[0]+":";
                   var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                  if(secSplit.toString().length > 3){
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  }else{
+                    var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                  }
 
                   if(sec >= 10 && sec < 60){
                   var strSec ="0"+sec;
@@ -1773,10 +2012,13 @@ class App extends React.Component{
             }
           }
           if(renderTime!=undefined){
-          this.setState({
-            currentSongTime:renderTime,
-          })
-
+            var fill =  (songPlay.currentTime/songPlay.duration)*100;
+            var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+            this.setState({
+              currentSongTime:renderTime,
+              currentSongProgress:fill,
+              musicBarProgress:color,
+             })
         }
 
       })
@@ -1843,7 +2085,12 @@ class App extends React.Component{
                   if(findMin<10){
                     var min= findMin.toString().split('.')[0]+":";
                     var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                    if(secSplit.toString().length > 3){
+                      var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    }else{
+                      var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                    }
 
                     if(sec >= 10 && sec < 60){
                     var strSec ="0"+sec;
@@ -1860,10 +2107,13 @@ class App extends React.Component{
               }
             }
             if(renderTime!=undefined){
-            this.setState({
-              currentSongTime:renderTime,
-            })
-
+              var fill =  (nextPlay.currentTime/nextPlay.duration)*100;
+              var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+              this.setState({
+                currentSongTime:renderTime,
+                currentSongProgress:fill,
+                musicBarProgress:color,
+               })
           }
 
         })
@@ -1939,7 +2189,12 @@ class App extends React.Component{
                 if(findMin<10){
                   var min= findMin.toString().split('.')[0]+":";
                   var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                  if(secSplit.toString().length > 3){
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  }else{
+                    var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                  }
 
                   if(sec >= 10 && sec < 60){
                   var strSec ="0"+sec;
@@ -1956,10 +2211,13 @@ class App extends React.Component{
             }
           }
           if(renderTime!=undefined){
-          this.setState({
-            currentSongTime:renderTime,
-          })
-
+            var fill =  (songPlay.currentTime/songPlay.duration)*100;
+            var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+            this.setState({
+              currentSongTime:renderTime,
+              currentSongProgress:fill,
+              musicBarProgress:color,
+             })
         }
 
       })
@@ -2025,7 +2283,12 @@ class App extends React.Component{
                   if(findMin<10){
                     var min= findMin.toString().split('.')[0]+":";
                     var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                    if(secSplit.toString().length > 3){
+                      var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    }else{
+                      var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                    }
 
                     if(sec >= 10 && sec < 60){
                     var strSec ="0"+sec;
@@ -2042,10 +2305,13 @@ class App extends React.Component{
               }
             }
             if(renderTime!=undefined){
-            this.setState({
-              currentSongTime:renderTime,
-            })
-
+              var fill =  (nextPlay.currentTime/nextPlay.duration)*100;
+              var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+              this.setState({
+                currentSongTime:renderTime,
+                currentSongProgress:fill,
+                musicBarProgress:color,
+               })
           }
 
         })
@@ -2122,7 +2388,12 @@ class App extends React.Component{
                 if(findMin<10){
                   var min= findMin.toString().split('.')[0]+":";
                   var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                  var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                  if(secSplit.toString().length > 3){
+                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                  }else{
+                    var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                  }
 
                   if(sec >= 10 && sec < 60){
                   var strSec ="0"+sec;
@@ -2139,10 +2410,13 @@ class App extends React.Component{
             }
           }
           if(renderTime!=undefined){
-          this.setState({
-            currentSongTime:renderTime,
-          })
-
+            var fill =  (songPlay.currentTime/songPlay.duration)*100;
+            var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+            this.setState({
+              currentSongTime:renderTime,
+              currentSongProgress:fill,
+              musicBarProgress:color,
+             })
         }
 
       })
@@ -2208,7 +2482,12 @@ class App extends React.Component{
                   if(findMin<10){
                     var min= findMin.toString().split('.')[0]+":";
                     var secSplit = Number('0.'+findMin.toString().split('.')[1])
-                    var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+                    if(secSplit.toString().length > 3){
+                      var sec = Math.round(Number('.'+secSplit.toString()[2]+secSplit.toString()[3])*60);
+
+                    }else{
+                      var sec = Math.round(Number('.'+secSplit.toString()[2])*60)
+                    }
 
                     if(sec >= 10 && sec < 60){
                     var strSec ="0"+sec;
@@ -2225,10 +2504,13 @@ class App extends React.Component{
               }
             }
             if(renderTime!=undefined){
-            this.setState({
-              currentSongTime:renderTime,
-            })
-
+              var fill =  (nextPlay.currentTime/nextPlay.duration)*100;
+              var color = "linear-gradient(90deg, #1db954 "+fill+"%, #b3b3b3 "+fill+"%)";
+              this.setState({
+                currentSongTime:renderTime,
+                currentSongProgress:fill,
+                musicBarProgress:color,
+               })
           }
 
         })
@@ -2329,7 +2611,7 @@ class App extends React.Component{
     return (
       <div className= 'controller-components'>
         <Left currentState= {this.state} handleHeartClick={this.handleHeartClick.bind(this)} handleWindowClick={this.handleWindowClick.bind(this)}/>
-        <Center currentState={this.state} handleShuffleClick={this.handleShuffleClick.bind(this)} handleSkipBackClick= {this.handleSkipBackClick.bind(this)} handlePlayClick={this.handlePlayClick.bind(this)} handleSkipForwardClick={this.handleSkipForwardClick.bind(this)} handleRepeatClick={this.handleRepeatClick.bind(this)}/>
+        <Center currentState={this.state} handleShuffleClick={this.handleShuffleClick.bind(this)} handleSkipBackClick= {this.handleSkipBackClick.bind(this)} handlePlayClick={this.handlePlayClick.bind(this)} handleSkipForwardClick={this.handleSkipForwardClick.bind(this)} handleRepeatClick={this.handleRepeatClick.bind(this)} songRange={this.songRange.bind(this)}/>
         <Right currentState={this.state} handleQueueClick={this.handleQueueClick.bind(this)} handleDeviceClick={this.handleDeviceClick.bind(this)} handleVolumeClick={this.handleVolumeClick.bind(this)} volumeRange={this.volumeRange.bind(this)}/>
       </div>
     )

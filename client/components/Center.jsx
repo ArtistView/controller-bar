@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Center= function({currentState,handleShuffleClick,handleSkipBackClick,handlePlayClick,handleSkipForwardClick,handleRepeatClick}){
+const Center= function({currentState,handleShuffleClick,handleSkipBackClick,handlePlayClick,handleSkipForwardClick,handleRepeatClick,songRange}){
   return(
     <div className= "controller_center">
       <div className = "controls-container" dir="ltr">
@@ -25,11 +25,8 @@ const Center= function({currentState,handleShuffleClick,handleSkipBackClick,hand
         <div className = "play-bar">
           <div className="time-progress left-time">{currentState.currentSongTime}</div>
           <div className="progress-bar">
-            <div className="middle-align progress-bar__bg">
-              <div className="progress-bar-wrapper">
-                <div className="progress-bar-change" style={{transform: 'translateX(-34.4635%)'}}></div>
-              </div>
-              <button className="middle-align progress-bar-slide" style={{left:'65.5365%'}}></button>
+            <div className="progress-bar-wrapper">
+              <input type="range" className="music-bar" min="0" max = "100" value ={currentState.currentSongProgress}style={{background:currentState.musicBarProgress}}onChange={songRange}/>
             </div>
           </div>
           <div className="time-progress right-time">{currentState.songDuration}</div>
