@@ -439,44 +439,7 @@ a {
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-/*
-.progress-bar__bg{
-  background-color: #535353;
-  border-radius: 2px;
-  display: flex;
-  display:-webkit-box;
-  display:-ms-flexbox;
-  height: 4px;
-  width: 100%;
-}
-.progress-bar-wrapper{
-  overflow: hidden;
-  width: 100%;
-  height: 4px;
-  border-radius: 2px;
-}
-.progress-bar-change{
-  background-color: #b3b3b3;
-  border-radius: 2px;
-  height: 4px;
-  width:100%;
-  -webkit-transform: translateX(-100%);
-  transform: translateX(-100%);
-}
-.progress-bar-slide{
-  background-color: #fff;
-  border:0;
-  border-radius: 50%;
-  width: 12px;
-  height: 12px;
-  margin-left:-6px;
-  z-index: 100;
-  -webkit-box-shadow:0 2px 4px 0 rgba(0,0,0,.5);
-  box-shadow:0 2px 4px 0 rgba(0,0,0,.5);
-  opacity: 0;
-}
 
-*/
 .right-time{
   font-size: 11px;
   font-weight: 400;
