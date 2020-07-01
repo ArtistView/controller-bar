@@ -1,11 +1,11 @@
 import React from 'react';
 
 const Connect = function({currentState}){
-
-  if(currentState.deviceState === true)
+  //connect displays a device connect instuction window if true
+  //has no functionality besides display
+  if(currentState.deviceState===true)
   {
     return(
-
       <div className="connect-device-list-container connect-device-list-container--is-visable">
       <div className="connect-list">
         <div className="connect-title" as="div" style={{color:'rgb(255,255,255)'}}>
@@ -24,14 +24,12 @@ const Connect = function({currentState}){
      </div>
     )
   }
-
   if(currentState.deviceState===false){
     return (
       <div></div>
     )
   }
 }
-
 
 export default Connect;
 

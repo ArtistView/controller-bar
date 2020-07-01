@@ -2,9 +2,11 @@ import React from 'react';
 import Connect from './Connect.jsx'
 
 const Right = function({currentState,handleQueueClick,handleDeviceClick,handleVolumeClick,volumeRange}){
+  //Right displays all right components
+  //queuue/device connect/ speaker icon/ volume bar
   return(
-    <div className = 'controller_right'>
-      <div className = "controller-right-inner">
+    <div className='controller_right'>
+      <div className="controller-right-inner">
         <div className="right-controls">
           <div className="queue">
             <div className={currentState.queueWrapper}>
@@ -17,10 +19,10 @@ const Right = function({currentState,handleQueueClick,handleDeviceClick,handleVo
               <Connect currentState={currentState}/>
             </span>
           </div>
-          <div className="volume-bar" dir= 'ltr'>
+          <div className="volume-bar" dir='ltr'>
             <button className={currentState.volumeIcon} onClick={(event)=> handleVolumeClick(event)}></button>
             <div className='input-wrapper'>
-              <input type="range" className ="input-bar" min="0" max = "100" value ={currentState.volumeValue} style={{background:currentState.volumeProgress}} onChange={volumeRange}/>
+              <input type="range" className="input-bar" min="0" max ="100" value={currentState.volumeValue} style={{background:currentState.volumeProgress}} onChange={volumeRange}/>
             </div>
           </div>
         </div>

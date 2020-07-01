@@ -1,17 +1,19 @@
 import React from 'react';
-import { FaBeer } from 'react-icons/fa'
+
 
 const Left = function({currentState,handleHeartClick,handleWindowClick}){
+  //left displays all left components of play bar
+  //cover-art/song name/ album name/ heart/ window icons
   return(
-    <div className ='controller_left'>
-      <div className = 'now-playing' role ='contentinfo' aria-label ="hi--place holder">
+    <div className='controller_left'>
+      <div className='now-playing' role ='contentinfo'>
         <div className ="image-container">
           <div draggable='true'>
-            <a className = "a-container" >
-              <div className = "cover-art-container">
-                <div className = "cover-art shadow">
+            <a className="a-container" >
+              <div className="cover-art-container">
+                <div className="cover-art shadow">
                   <div>
-                    <img src ={currentState.coverArt}className = "cover-art-image"/>
+                    <img src ={currentState.coverArt} className="cover-art-image"/>
                   </div>
                 </div>
               </div>
@@ -19,25 +21,25 @@ const Left = function({currentState,handleHeartClick,handleWindowClick}){
           </div>
           <div></div>
         </div>
-        <div className = "song-title-container">
-          <div className ="song-title" dir = 'auto'>
-            <div className ="menu-wrapper">
+        <div className="song-title-container">
+          <div className="song-title" dir="auto">
+            <div className="menu-wrapper">
               <span draggable="true">
-                  <a className = "song-text">{currentState.songTitle}</a>
+                  <a className="song-text">{currentState.songTitle}</a>
               </span>
             </div>
           </div>
-          <div className = "artist-name" dir= "auto">
+          <div className="artist-name" dir="auto">
             <span>
               <span className="artistname-wrapper">
                 <span draggable="true">
-                  <a className= "artist-text">{currentState.albumTitle}</a>
+                  <a className="artist-text">{currentState.albumTitle}</a>
                 </span>
               </span>
             </span>
           </div>
         </div>
-        <div className= "button-container">
+        <div className="button-container">
           <button className={currentState.heart} onClick={(event)=> handleHeartClick(event)}>
           </button>
         </div>
@@ -48,5 +50,4 @@ const Left = function({currentState,handleHeartClick,handleWindowClick}){
     </div>
   )
 }
-
 export default Left
