@@ -1,6 +1,5 @@
 # controller-bar
-> This project contains a replica of Spotify's lower control bar
-> Project is fully functional
+> This project contains a replica of Spotify's lower control bar. Project is fully functional. 
 
 ## Related Projects
 
@@ -15,18 +14,14 @@
 1. [Requirements](#requirements)
 1. [Development](#development)
 
-## Usage
-
-> Some usage instructions
 
 ## Requirements
 
 An `nvmrc` file is included if using [nvm](https://github.com/creationix/nvm).
 
 - Node 6.13.0
-- etc
-
-## Development
+- npm 
+- MongoDb
 
 ### Installing Dependencies
 
@@ -35,4 +30,23 @@ From within the root directory:
 ```sh
 npm install -g webpack
 npm install
+```
+## Development
+
+To Run Server
+
+```sh
+npm start
+```
+
+To run dev enviroment/webpack
+
+```sh
+npm run react-dev
+```
+
+To run test
+
+```sh
+npm test
 ```
