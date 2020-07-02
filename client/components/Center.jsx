@@ -1,5 +1,5 @@
 import React from 'react';
-
+ 
 const Center= function({currentState,handleShuffleClick,handleSkipBackClick,handlePlayClick,handleSkipForwardClick,handleRepeatClick,songRange}){
   //center renders all the center components of app
   //music pogress bar

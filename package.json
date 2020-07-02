@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "start": "nodemon server/server.js ",
-    "react-dev": "webpack -d --watch"
+    "react-dev": "webpack -d --watch",
+    "lint": "eslint client",
+    "build": "webpack -d && grunt deploy"
   },
   "repository": {
     "type": "git",
@@ -49,6 +51,8 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.20.0",
     "eslint-plugin-react-hooks": "^2.5.1",
+    "grunt": "^1.1.0",
+    "grunt-aws-s3": "^2.0.2",
     "jest": "^26.0.1",
     "react-test-renderer": "^16.13.1",
     "webpack": "^4.43.0",

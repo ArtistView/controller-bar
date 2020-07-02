@@ -361,6 +361,7 @@ class App extends React.Component{
     var setColor=this.state.saveColor;
     var setIcon=this.state.volumeIcon;
     var songPlay=this.state.readyToPlay;
+    
     //Catch in case states trip
     //Two state should never be true
     if(this.state.mute===this.state.mid || this.state.mid===this.state.loud || this.state.mute===this.state.loud){
