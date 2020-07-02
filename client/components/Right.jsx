@@ -1,6 +1,6 @@
 import React from 'react';
 import Connect from './Connect.jsx'
-
+ 
 const Right = function({currentState,handleQueueClick,handleDeviceClick,handleVolumeClick,volumeRange}){
   //Right displays all right components
   //queuue/device connect/ speaker icon/ volume bar

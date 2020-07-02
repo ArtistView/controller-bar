@@ -1,6 +1,6 @@
 import React from 'react';
 
-
+ 
 const Left = function({currentState,handleHeartClick,handleWindowClick}){
   //left displays all left components of play bar
   //cover-art/song name/ album name/ heart/ window icons

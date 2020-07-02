@@ -23,7 +23,7 @@ const Connect = function({currentState}){
       </div>
      </div>
     )
-  }
+  } 
   if(currentState.deviceState===false){
     return (
       <div></div>
