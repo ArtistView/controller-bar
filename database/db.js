@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 //connects to mongo db
-mongoose.connect('mongodb://localhost/fakeSpotify',
+var dbUrl = process.env.DB || 'mongodb://localhost/fakeSpotify';
+mongoose.connect(dbUrl,
 {
   useNewUrlParser:true,
   useUnifiedTopology: true,
