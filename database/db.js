@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 //connects to mongo db
-// var dbUrl = process.env.DB || 'mongodb://localhost/fakeSpotify';
+ //var dbUrl = process.env.DB || 'mongodb://localhost/fakeSpotify';
 //'mongodb+srv://fake_spotify:C@cluster0-ck1u1.mongodb.net/FEC-FakeSpotify?retryWrites=true&w=majority'
-mongoose.connect(process.env.DB,
+mongoose.connect('mongodb+srv://fake_spotify:Cruzazul@cluster0-ck1u1.mongodb.net/FEC-FakeSpotify?retryWrites=true&w=majority',
 {
   useNewUrlParser:true,
   useUnifiedTopology: true,
