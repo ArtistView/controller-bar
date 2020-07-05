@@ -64,7 +64,12 @@ class App extends React.Component{
   //compoundDidMount uses axios to make intial call to server
   componentDidMount(){
     //axios call server for album
-    axios.get("http://localhost:4000/albums")
+    var url = "http://fakespotify-env.eba-qqeare6m.us-west-1.elasticbeanstalk/albums";
+
+    var oldAlbumUrl="http://localhost:4000/albums";
+    var oldSongUrl = "`http://localhost:4000/songs/${songs[i]}`"
+
+    axios.get(url)
       .then((data)=>{
         this.setState({
           album:data.data[0],
@@ -75,7 +80,7 @@ class App extends React.Component{
         var arr=[];
         //call server for each song in album
         for(var i =0; i<songs.length;i++){
-          axios.get(`http://localhost:4000/songs/${songs[i]}`)
+          axios.get(`http://fakespotify-env.eba-qqeare6m.us-west-1.elasticbeanstalk/songs/${songs[i]}`)
             .then((data)=>{
               arr.push(data.data)
               this.setState({
@@ -361,7 +366,7 @@ class App extends React.Component{
     var setColor=this.state.saveColor;
     var setIcon=this.state.volumeIcon;
     var songPlay=this.state.readyToPlay;
-    
+
     //Catch in case states trip
     //Two state should never be true
     if(this.state.mute===this.state.mid || this.state.mid===this.state.loud || this.state.mute===this.state.loud){
