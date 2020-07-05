@@ -71,6 +71,7 @@ class App extends React.Component{
 
     axios.get(url)
       .then((data)=>{
+        console.log(data.data);
         this.setState({
           album:data.data[0],
           albumTitle:data.data[0].title,
@@ -82,6 +83,7 @@ class App extends React.Component{
         for(var i =0; i<songs.length;i++){
           axios.get(`http://fakespotify-env.eba-qqeare6m.us-west-1.elasticbeanstalk/songs/${songs[i]}`)
             .then((data)=>{
+              console.log('works')
               arr.push(data.data)
               this.setState({
                 songs:arr,
