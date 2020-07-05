@@ -64,7 +64,7 @@ class App extends React.Component{
   //compoundDidMount uses axios to make intial call to server
   componentDidMount(){
     //axios call server for album
-    var url = "http://fakespotify-env.eba-qqeare6m.us-west-1.elasticbeanstalk/albums";
+    var url = "http://fakespotify-env.eba-qqeare6m.us-west-1.elasticbeanstalk.com/albums";
 
     var oldAlbumUrl="http://localhost:4000/albums";
     var oldSongUrl = "`http://localhost:4000/songs/${songs[i]}`"
@@ -81,7 +81,7 @@ class App extends React.Component{
         var arr=[];
         //call server for each song in album
         for(var i =0; i<songs.length;i++){
-          axios.get(`http://fakespotify-env.eba-qqeare6m.us-west-1.elasticbeanstalk/songs/${songs[i]}`)
+          axios.get(`http://fakespotify-env.eba-qqeare6m.us-west-1.elasticbeanstalk.com/songs/${songs[i]}`)
             .then((data)=>{
               console.log('works')
               arr.push(data.data)
