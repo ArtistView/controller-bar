@@ -1,6 +1,6 @@
 import React from 'react';
 
- 
+
 const Left = function({currentState,handleHeartClick,handleWindowClick}){
   //left displays all left components of play bar
   //cover-art/song name/ album name/ heart/ window icons
@@ -41,7 +41,7 @@ const Left = function({currentState,handleHeartClick,handleWindowClick}){
         </div>
         <div className="button-container">
           <button className={currentState.heart} onClick={(event)=> handleHeartClick(event)}>
-          </button>
+          </button> 
         </div>
         <div className="window-player">
           <button className={currentState.window} onClick={(event)=>handleWindowClick(event)}></button>
