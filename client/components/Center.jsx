@@ -1,5 +1,5 @@
 import React from 'react';
- 
+
 const Center= function({currentState,handleShuffleClick,handleSkipBackClick,handlePlayClick,handleSkipForwardClick,handleRepeatClick,songRange}){
   //center renders all the center components of app
   //music pogress bar
@@ -31,7 +31,7 @@ const Center= function({currentState,handleShuffleClick,handleSkipBackClick,hand
           <div className="progress-bar">
             <div className="progress-bar-wrapper">
               <input type="range" className="music-bar" min="0" max="100" value ={currentState.currentSongProgress}style={{background:currentState.musicBarProgress}}onChange={songRange}/>
-            </div>
+            </div> 
           </div>
           <div className="time-progress right-time">{currentState.songDuration}</div>
         </div>

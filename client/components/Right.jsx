@@ -1,6 +1,6 @@
 import React from 'react';
 import Connect from './Connect.jsx'
- 
+
 const Right = function({currentState,handleQueueClick,handleDeviceClick,handleVolumeClick,volumeRange}){
   //Right displays all right components
   //queuue/device connect/ speaker icon/ volume bar
@@ -24,7 +24,7 @@ const Right = function({currentState,handleQueueClick,handleDeviceClick,handleVo
             <div className='input-wrapper'>
               <input type="range" className="input-bar" min="0" max ="100" value={currentState.volumeValue} style={{background:currentState.volumeProgress}} onChange={volumeRange}/>
             </div>
-          </div>
+          </div> 
         </div>
       </div>
     </div>

@@ -2,12 +2,12 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import {shallow, mount, render} from 'enzyme'
 
-import App from '../../client/components/App.jsx';
+import Center from '../../client/components/Center.jsx';
 
 describe('test',()=>{
   it('should exist',()=>{
-    const wrapper = shallow(<App />)
+    const wrapper = shallow(<Center />)
 
-    expect((wrapper).find('.App').exists()).toBe(true);
+    expect((wrapper).find('.Center').exists()).toBe(true);
   })
 })
