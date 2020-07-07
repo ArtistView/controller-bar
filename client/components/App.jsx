@@ -67,9 +67,7 @@ class App extends React.Component{
     var url = "http://fakespotify-env.eba-qqeare6m.us-west-1.elasticbeanstalk.com/albums";
 
     var oldAlbumUrl="http://localhost:4000/albums";
-    var oldSongUrl = "`http://localhost:4000/songs/${songs[i]}`"
-
-    axios.get(url)
+      axios.get(url)
       .then((data)=>{
         this.setState({
           album:data.data[0],
@@ -80,6 +78,7 @@ class App extends React.Component{
         var arr=[];
         //call server for each song in album
         for(var i =0; i<songs.length;i++){
+          var oldSongUrl = `http://localhost:4000/songs/${songs[i]}`
           axios.get(`http://fakespotify-env.eba-qqeare6m.us-west-1.elasticbeanstalk.com/songs/${songs[i]}`)
             .then((data)=>{
               arr.push(data.data)
