@@ -15,12 +15,15 @@ describe('App',function(){
 })
 describe('endPoint',function(){
   it('Loads 101 Albums',()=>{
-    cy.request('http://localhost:4000/albums')
+    var oldUrl= 'http://localhost:4000/'
+    cy.request('http://fakespotify-env.eba-qqeare6m.us-west-1.elasticbeanstalk.com/albums')
     .its('body')
     .should('have.length',101)
   })
   it('Loads song',()=>{
-    cy.request('http://localhost:4000/songs/5eebfe07a386ca12ede16e2c')
+    var url= 'http://fakespotify-env.eba-qqeare6m.us-west-1.elasticbeanstalk.com/songs/5eebfe07a386ca12ede16e2c';
+    var oldUrl= 'http://localhost:4000/songs/5eebfe07a386ca12ede16e2c'
+    cy.request(url)
       .then((res)=>{
         expect(res.body).have.property('title')
       })
