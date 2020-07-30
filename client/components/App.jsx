@@ -14,7 +14,7 @@ class App extends React.Component{
       readyToPlay:new Audio(""),
       songTitle:"Hello World",
       albumTitle:"Hack Reactor",
-      coverArt:"https://song-for-fake-spotify.s3-us-west-1.amazonaws.com/Obsidian.png",
+      coverArt:"https://controller-bar.s3-us-west-1.amazonaws.com/logo5.JPG",
       heart:"heart-button icon-heart",
       heartState:false,
       windowState:false,
@@ -67,33 +67,34 @@ class App extends React.Component{
     var url = "http://fakespotify-env.eba-qqeare6m.us-west-1.elasticbeanstalk.com/albums";
 
     var oldAlbumUrl="http://localhost:4000/albums";
-      axios.get(url)
-      .then((data)=>{
-        this.setState({
-          album:data.data[0],
-          albumTitle:data.data[0].title,
-          coverArt:data.data[0].imageUrl,
-        })
-        var songs=data.data[0].songs;
-        var arr=[];
-        //call server for each song in album
-        for(var i =0; i<songs.length;i++){
-          var oldSongUrl = `http://localhost:4000/songs/${songs[i]}`
-          axios.get(`http://fakespotify-env.eba-qqeare6m.us-west-1.elasticbeanstalk.com/songs/${songs[i]}`)
-            .then((data)=>{
-              arr.push(data.data)
-              this.setState({
-                songs:arr,
-                songTitle:arr[0].title,
-                readyToPlay:new Audio(arr[0].mp3),
-                songDuration:arr[0].time,
-                songSecDuration:arr[0].duration,
-              })
-
-            })
-        }
-
+    var herokuURL = window.location.href;
+    axios.get(herokuURL+'albums')
+    .then((data)=>{
+      this.setState({
+        album:data.data[0],
+        albumTitle:data.data[0].title,
+        coverArt:data.data[0].imageUrl,
       })
+      var songs=data.data[0].songs;
+      var arr=[];
+      //call server for each song in album
+      for(var i =0; i<songs.length;i++){
+        var oldSongUrl = `http://localhost:4000/songs/${songs[i]}`
+        axios.get(herokuURL+`songs/${songs[i]}`)
+          .then((data)=>{
+            arr.push(data.data)
+            this.setState({
+              songs:arr,
+              songTitle:arr[0].title,
+              readyToPlay:new Audio(arr[0].mp3),
+              songDuration:arr[0].time,
+              songSecDuration:arr[0].duration,
+            })
+
+          })
+      }
+
+    })
 
   }
   //repeatAlbumOnce function repeats the album continously once
