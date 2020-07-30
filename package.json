@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/server.js ",
     "react-server": "nodemon server/server.js",
-    "react-dev": "webpack -d --watch",
+    "react-dev": "webpack -d --watch"
   },
   "repository": {
     "type": "git",
