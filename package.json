@@ -4,12 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage",
     "start": "node server/server.js ",
     "react-server": "nodemon server/server.js",
     "react-dev": "webpack -d --watch",
-    "lint": "eslint client",
-    "build": "webpack -d && grunt deploy"
   },
   "repository": {
     "type": "git",
