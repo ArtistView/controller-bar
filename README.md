@@ -1,5 +1,5 @@
 # controller-bar
-> ArtistView is a full stack application that provides users a seemless way to browse through an artist's songs and albums. Each page is dedicated to one specific artist. The application has fully functioning audio capabilities.
+ArtistView is a full stack application that provides users a seemless way to browse through an artist's songs and albums. Each page is dedicated to one specific artist. The application has fully functioning audio capabilities.
 
 This repository holds the contoller-bar component. This component allows the user to play, pause, skip, heart, repeat, mute, shuffle, and repeat album functionalities. Other functions include cover-art display, song progress-display bar that allows user to move song time forward and backward, and a volume bar. 
 
