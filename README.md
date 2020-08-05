@@ -3,7 +3,7 @@ ArtistView is a full stack application that provides users a seemless way to bro
 
 This repository holds the contoller-bar component. This component allows the user to play, pause, skip, heart, repeat, mute, shuffle, and repeat album functionalities. Other functions include cover-art display, song progress-display bar that allows user to move song time forward and backward, and a volume bar. 
 
-Application is now deployed on Heroku and can be visited on the link below:
+Application is now deployed on Heroku and can be visited at:
 https://fast-spire-49543.herokuapp.com/
 
 ## Related Projects
