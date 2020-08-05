@@ -1,16 +1,15 @@
 # controller-bar
-> This project contains a replica of Spotify's lower control bar. Project is fully functional. 
+> ArtistView is a full stack application that provides users a seemless way to browse through an artist's songs and albums. Each page is dedicated to one specific artist. The application has fully functioning audio capabilities.
+
+This repository holds the contoller-bar component. This component allows the user to play, pause, skip, heart, repeat, mute, shuffle, and repeat album functionalities. Other functions include cover-art display, song progress-display bar that allows user to move song time forward and backward, and a volume bar. 
 
 ## Related Projects
 
-  - https://github.com/teamName/repo
-  - https://github.com/teamName/repo
-  - https://github.com/teamName/repo
-  - https://github.com/teamName/repo
-
+  - https://github.com/ArtistView/albums_service
+  - https://github.com/ArtistView/top_songs_service
+  - https://github.com/ArtistView/controller-bar_proxy
 ## Table of Contents
 
-1. [Usage](#Usage)
 1. [Requirements](#requirements)
 1. [Development](#development)
 
